@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/app/lib/firebase';
+import { useChannelMembership } from '@/hooks/useChannelMembership';
 
 interface TaskFormProps {
   groupId: string;
@@ -11,6 +12,7 @@ interface TaskFormProps {
 export default function TaskForm({ groupId }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { isMember, isLoading } = useChannelMembership();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +34,18 @@ export default function TaskForm({ groupId }: TaskFormProps) {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isMember) {
+    return (
+      <div className="text-center p-4 bg-yellow-50 rounded-md">
+        <p className="text-yellow-700">Please subscribe to our channel to add tasks</p>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <input
@@ -47,6 +61,7 @@ export default function TaskForm({ groupId }: TaskFormProps) {
       >
         Add Task
       </button>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </form>
   );
 }
