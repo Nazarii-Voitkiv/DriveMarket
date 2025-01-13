@@ -13,6 +13,8 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@telegram-apps/sdk-react": "^2.0.25",
+    "@types/better-sqlite3": "^7.6.12",
+    "better-sqlite3": "^11.7.2",
     "dotenv": "^16.4.7",
     "firebase": "^11.1.0",
     "next": "15.1.4",
