@@ -6,6 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "vercel-php": "github:vercel-community/php"
+    "vercel-php": "0.5.2"
   }
 }

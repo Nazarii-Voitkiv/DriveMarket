@@ -7,5 +7,13 @@
   "routes": [
     { "src": "/(.*)\\.php$", "dest": "/api/$1.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
-  ]
+  ],
+  "build": {
+    "env": {
+      "NOW_PHP_DEBUG": "1"
+    }
+  },
+  "env": {
+    "NOW_PHP_DEBUG": "1"
+  }
 }
