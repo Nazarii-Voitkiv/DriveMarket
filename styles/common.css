@@ -1,0 +1,338 @@
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary-color: #4f46e5;
+    --accent-color: #f97316;
+    --background-light: #f8fafc;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding-top: calc(70px + 1.5rem);
+    box-sizing: border-box;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+    border-radius: 0 0 1rem 1rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .header {
+        left: 0;
+        right: 0;
+        padding: 1rem;
+    }
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.menu-main-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.menu-main-links a {
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.menu-main-links a:hover {
+    color: var(--primary-color);
+}
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.auth-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.auth-btn:first-child {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.auth-btn:first-child:hover {
+    background-color: var(--primary-dark);
+}
+
+.auth-btn:last-child {
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+.auth-btn:last-child:hover {
+    background-color: var(--background-light);
+}
+
+.header nav {
+    margin-right: auto;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.menu a {
+    color: var(--text-dark);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.menu a:hover::after {
+    width: 100%;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.avatar-circle:hover {
+    background-color: var(--primary-dark);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background-color: var(--white);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    min-width: 200px;
+    padding: 0.5rem;
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-dark);
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: var(--transition);
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: var(--background-light);
+    color: var(--primary-color);
+}
+
+.dropdown-menu svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Show/hide auth elements based on login state */
+body.logged-in .auth-buttons {
+    display: none !important;
+}
+
+body.logged-in .user-menu {
+    display: block !important;
+}
+
+body.logged-out .auth-buttons {
+    display: flex !important;
+}
+
+body.logged-out .user-menu {
+    display: none !important;
+}
+
+.menu-auth-links {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid var(--background-light);
+}
+
+.menu-auth-links .auth-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.menu-auth-links .auth-btn:first-child {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.menu-auth-links .auth-btn:last-child {
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+        left: 0;
+        right: 0;
+        margin-top: 0;
+        border-radius: 0;
+    }
+
+    .header-left nav {
+        display: none;
+    }
+
+    .menu {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu.active {
+        display: flex;
+    }
+
+    .menu-main-links {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .menu-main-links a {
+        padding: 0.5rem 0;
+    }
+
+    .auth-container {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+}
+
+.footer {
+    background-color: var(--text-dark);
+    color: var(--white);
+    padding: 4rem 2rem;
+    margin: 4rem -1rem 0;
+}
+
+@media (min-width: 1600px) {
+    .footer {
+        margin: 4rem -8rem 0;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .footer {
+        margin: 4rem -4rem 0;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .footer {
+        margin: 4rem -2rem 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer {
+        margin: 4rem -1rem 0;
+        padding: 3rem 1rem;
+    }
+}

@@ -1,0 +1,346 @@
+/* Profile Styles */
+:root {
+    --profile-spacing: 2rem;
+    --card-border-radius: 1rem;
+    --transition-base: all 0.3s ease;
+}
+
+.profile-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    background: var(--white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* Profile Header */
+.profile-header {
+    position: relative;
+    background: var(--white);
+    padding-bottom: 2rem;
+}
+
+.profile-cover {
+    height: 200px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    margin-top: -75px;
+    padding: 0 var(--profile-spacing);
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.avatar-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: var(--white);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--white);
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-upload {
+    margin-bottom: 1rem;
+}
+
+.upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--white);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.upload-label:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.upload-label svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Avatar Upload Form */
+.avatar-form {
+    margin-top: 1rem; 
+}
+
+.avatar-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.avatar-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.avatar-form input[type="file"] {
+    display: none; /* Ensure the file input is visible */
+    padding: 0.5rem;
+    border: 1px solid var(--text-light);
+    border-radius: 0.5rem;
+}
+
+.avatar-form button[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.avatar-form button[type="submit"]:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Profile Content */
+.profile-content {
+    padding: var(--profile-spacing);
+}
+
+.profile-section {
+    background: var(--white);
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.profile-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-header {
+    padding: 1.5rem var(--profile-spacing);
+    border-bottom: 1px solid var(--background-light);
+}
+
+.section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.section-header svg {
+    color: var(--primary-color);
+}
+
+.info-grid {
+    padding: var(--profile-spacing);
+    display: grid;
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.info-label {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.info-value {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.edit-btn {
+    padding: 0.25rem;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition-base);
+    border-radius: 0.25rem;
+}
+
+.edit-btn:hover {
+    color: var(--primary-color);
+    background: var(--background-light);
+}
+
+.edit-form {
+    margin-top: 1rem;
+}
+
+.edit-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--background-light);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: var(--transition-base);
+}
+
+.edit-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.edit-actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.save-btn {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+}
+
+.save-btn:hover {
+    background: var(--primary-dark);
+}
+
+.cancel-btn {
+    background: var(--white);
+    color: var(--text-dark);
+    border: 1px solid var(--background-light);
+}
+
+.cancel-btn:hover {
+    background: var(--background-light);
+}
+
+/* Password Section */
+.password-section {
+    padding: var(--profile-spacing);
+}
+
+.password-form {
+    max-width: 400px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--background-light);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: var(--transition-base);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .profile-cover {
+        height: 150px;
+    }
+
+    .profile-avatar-wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .avatar-preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .section-header {
+        padding: 1rem;
+    }
+
+    .info-grid {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-cover {
+        height: 120px;
+    }
+
+    .avatar-preview {
+        width: 100px;
+        height: 100px;
+    }
+
+    .edit-actions {
+        flex-direction: column;
+    }
+
+    .edit-actions button {
+        width: 100%;
+    }
+}
