@@ -48,6 +48,7 @@ if (isset($_GET['edit'])) {
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/create-listing.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/avatar.css">
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     
@@ -82,7 +83,8 @@ if (isset($_GET['edit'])) {
             </div>
             <div class="user-menu" style="display: none;">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <span id="userInitials">A</span>
+                    <div class="user-initial"></div>
+                    <img class="avatar-image" alt="User avatar">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.php">Profil</a>

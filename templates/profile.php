@@ -15,6 +15,7 @@ if (!isset($_COOKIE['token'])) {
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/profile.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/avatar.css">
     <title>DriveMarket - Mój profil</title>
 </head>
 <body>
@@ -32,7 +33,8 @@ if (!isset($_COOKIE['token'])) {
             </div>
             <div class="user-menu">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <span id="userInitials">A</span>
+                    <div class="user-initial"></div>
+                    <img class="avatar-image" alt="User avatar">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.php">
@@ -201,5 +203,6 @@ if (!isset($_COOKIE['token'])) {
     </footer>
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/profile.js"></script>
+    <script src="../js/avatar.js"></script>
 </body>
 </html>

@@ -13,6 +13,7 @@ $config = include('../config.php');
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/posts.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/avatar.css">
 </head>
 <body>
 <header class="header">
@@ -31,7 +32,8 @@ $config = include('../config.php');
         <!-- Якщо користувач авторизований (перемикатися JS-ом) -->
         <div class="user-menu" style="display: none;">
             <div class="avatar-circle" onclick="toggleDropdown()">
-                <span id="userInitials">A</span>
+                <div class="user-initial"></div>
+                <img class="avatar-image" alt="User avatar">
             </div>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="profile.php">Profil</a>

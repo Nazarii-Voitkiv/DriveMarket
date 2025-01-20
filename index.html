@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/footer.css">
+    <link rel="stylesheet" href="styles/avatar.css">
     <title>DriveMarket</title>
 </head>
 <body>
@@ -29,7 +30,8 @@
             </div>
             <div class="user-menu">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <span id="userInitials">A</span>
+                    <div class="user-initial"></div>
+                    <img class="avatar-image" alt="User avatar">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="templates/profile.php">
@@ -197,13 +199,19 @@
             const response = await fetch('handlers/get-user-data.php');
             const userData = await response.json();
             
-            if (userData.avatar_url) {
-                const headerAvatar = document.querySelector('.avatar-circle');
-                if (headerAvatar) {
-                    headerAvatar.innerHTML = `
-                        <img src="${userData.avatar_url}" 
-                             alt="User avatar"
-                             style="width: 100%; height: 100%; object-fit: cover;">`;
+            const headerAvatar = document.querySelector('.avatar-circle');
+            const userInitial = headerAvatar.querySelector('.user-initial');
+            const avatarImage = headerAvatar.querySelector('.avatar-image');
+            
+            if (headerAvatar) {
+                if (userData.avatar_url) {
+                    avatarImage.src = userData.avatar_url;
+                    avatarImage.style.display = 'block';
+                    userInitial.style.display = 'none';
+                } else if (userData.user_name) {
+                    userInitial.textContent = userData.user_name.charAt(0).toUpperCase();
+                    userInitial.style.display = 'block';
+                    avatarImage.style.display = 'none';
                 }
             }
         } catch (error) {

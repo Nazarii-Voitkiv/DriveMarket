@@ -12,6 +12,7 @@ session_start();
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/about.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/avatar.css">
     <title>O nas - DriveMarket</title>
 </head>
 <body>
@@ -32,7 +33,8 @@ session_start();
             <?php else: ?>
             <div class="user-menu">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <span id="userInitials">A</span>
+                    <div class="user-initial"></div>
+                    <img class="avatar-image" alt="User avatar">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.php">Profil</a>
