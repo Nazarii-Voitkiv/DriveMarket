@@ -211,11 +211,13 @@
 
 .edit-form input {
     width: 100%;
-    padding: 0.75rem 1rem;
+    height: 42px;
+    padding: 0 1rem;
     border: 1px solid var(--background-light);
     border-radius: 0.5rem;
     font-size: 0.875rem;
     transition: var(--transition-base);
+    margin-bottom: 0.5rem;
 }
 
 .edit-form input:focus {
@@ -227,16 +229,21 @@
 .edit-actions {
     display: flex;
     gap: 0.5rem;
-    margin-top: 0.75rem;
+    margin: 0;
 }
 
 .edit-actions button {
-    padding: 0.5rem 1rem;
+    height: 42px;
+    padding: 0 1rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
 }
 
 .save-btn {

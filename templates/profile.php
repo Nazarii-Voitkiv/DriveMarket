@@ -123,7 +123,7 @@ if (!isset($_COOKIE['token'])) {
                         </div>
                         <div id="nameEditForm" class="edit-form" style="display: none;">
                             <input type="text" id="newNameInput" placeholder="Wprowadź nowe imię">
-                            <div class="edit-actions">
+                            <div class="edit-actions" style="padding-left: 10px;">
                                 <button id="saveNameBtn" class="save-btn">Zapisz</button>
                                 <button id="cancelNameBtn" class="cancel-btn">Anuluj</button>
                             </div>
