@@ -94,6 +94,71 @@ document.addEventListener('DOMContentLoaded', async function() {
             `;
         }
 
+        // Event listeners for password forms
+        const createPasswordForm = document.getElementById('createPasswordForm');
+        if (createPasswordForm) {
+            createPasswordForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const password = this.querySelector('input[name="password"]').value;
+                
+                try {
+                    const response = await fetch('../handlers/update-password.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ password: password })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        alert('Hasło zostało utworzone pomyślnie');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Wystąpił błąd podczas tworzenia hasła');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Wystąpił błąd podczas tworzenia hasła');
+                }
+            });
+        }
+
+        const changePasswordForm = document.getElementById('changePasswordForm');
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Prevent form from submitting normally
+                const oldPassword = this.querySelector('input[name="oldPassword"]').value;
+                const newPassword = this.querySelector('input[name="newPassword"]').value;
+                
+                try {
+                    const response = await fetch('../handlers/update-password.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            oldPassword: oldPassword,
+                            newPassword: newPassword 
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        alert('Hasło zostało pomyślnie zmienione');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Wystąpił błąd podczas zmiany hasła');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Wystąpił błąd podczas zmiany hasła');
+                }
+            });
+        }
+
         // Podgląd awatara użytkownika
         const avatarPreview = document.getElementById('avatarPreview');
         if (userData.avatar_url) {

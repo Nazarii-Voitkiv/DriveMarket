@@ -302,6 +302,23 @@
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.password-form button[type="submit"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.password-form button[type="submit"]:hover {
+    background: var(--primary-dark);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile-container {
