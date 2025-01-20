@@ -159,28 +159,28 @@ if (isset($_GET['edit'])) {
             </div>
 
             <div class="form-row highlighted">
-                <div class="form-fields">
-                    <div class="form-group">
+                <div class="form-fields" style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
                         <label for="reg_number" class="normal-label">Numer rejestracyjny pojazdu*</label>
-                        <input type="text" id="reg_number" name="reg_number" placeholder="np. WY1234C" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="first_reg_date" class="normal-label">Data pierwszej rejestracji w historii pojazdu*</label>
-                        <div class="date-input-group">
-                            <input type="text" id="first_reg_date_day" name="first_reg_date_day" placeholder="DD" maxlength="2" pattern="[0-9]*" inputmode="numeric" required>
-                            <span class="date-separator">/</span>
-                            <input type="text" id="first_reg_date_month" name="first_reg_date_month" placeholder="MM" maxlength="2" pattern="[0-9]*" inputmode="numeric" required>
-                            <span class="date-separator">/</span>
-                            <input type="text" id="first_reg_date_year" name="first_reg_date_year" placeholder="RRRR" maxlength="4" pattern="[0-9]*" inputmode="numeric" required>
+                        <input type="text" id="reg_number" name="reg_number" placeholder="np. WY1234C" required style="width: 100%;">
+                        <div class="toggle-container">
+                            <label class="toggle">
+                                <input type="checkbox" name="hide_reg_info">
+                                <span class="toggle-switch"></span>
+                                <span class="toggle-label">Nie pokazuj numeru rejestracyjnego w ogłoszeniu</span>
+                            </label>
                         </div>
                     </div>
-                </div>
-                <div class="toggle-container">
-                    <label class="toggle">
-                        <input type="checkbox" name="hide_reg_info">
-                        <span class="toggle-switch"></span>
-                        <span class="toggle-label">Nie pokazuj numeru rejestracyjnego i daty pierwszej rejestracji w ogtoszeniu</span>
-                    </label>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="first_reg_date" class="normal-label">Data pierwszej rejestracji w historii pojazdu*</label>
+                        <div class="date-input-group" style="display: flex; align-items: center; gap: 5px; width: 100%;">
+                            <input type="text" id="first_reg_date_day" name="first_reg_date_day" placeholder="DD" maxlength="2" pattern="[0-9]*" inputmode="numeric" required style="width: 25%;">
+                            <span class="date-separator">/</span>
+                            <input type="text" id="first_reg_date_month" name="first_reg_date_month" placeholder="MM" maxlength="2" pattern="[0-9]*" inputmode="numeric" required style="width: 25%;">
+                            <span class="date-separator">/</span>
+                            <input type="text" id="first_reg_date_year" name="first_reg_date_year" placeholder="RRRR" maxlength="4" pattern="[0-9]*" inputmode="numeric" required style="width: 40%;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1743,90 +1743,6 @@ if (isset($_GET['edit'])) {
                     priceTypeLabel.classList.add('active');
                 }
             }
-        });
-        <?php endif; ?>
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Price type button handling
-            const priceTypeLabels = document.querySelectorAll('label.price-type-btn');
-            const priceTypeRadios = document.querySelectorAll('input[name="price_type"]');
-            
-            priceTypeLabels.forEach((label) => {
-                label.addEventListener('click', function() {
-                    // Remove active class from all labels
-                    priceTypeLabels.forEach(lbl => lbl.classList.remove('active'));
-                    // Add active class to clicked label
-                    this.classList.add('active');
-                    // Find and check the corresponding radio button
-                    const radioId = this.getAttribute('for');
-                    document.getElementById(radioId).checked = true;
-                });
-            });
-        });
-    </script>
-    <script>
-        // Initialize Quill editor
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Opisz swój samochód...',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]
-            }
-        });
-
-        // Update hidden input before form submission
-        document.getElementById('listingForm').onsubmit = function() {
-            var description = document.getElementById('description');
-            description.value = quill.root.innerHTML;
-            return true;
-        };
-    </script>
-    <script>
-        <?php if ($isEditing && $listingData): ?>
-        document.addEventListener('DOMContentLoaded', function() {
-            const formData = <?php echo json_encode($listingData); ?>;
-            
-            // Populate form fields
-            for (const [key, value] of Object.entries(formData)) {
-                if (!value || ['audio_multimedia', 'komfort', 'samochody_elektryczne', 
-                    'systemy_wspomagania', 'osiagi_tuning', 'bezpieczenstwo'].includes(key)) continue;
-
-                const elements = document.getElementsByName(key);
-                elements.forEach(element => {
-                    if (element.type === 'radio') {
-                        if (element.value === value.toString()) {
-                            element.checked = true;
-                            if (key === 'price_type') {
-                                const label = document.querySelector(`label[for="${element.id}"]`);
-                                if (label) label.classList.add('active');
-                            }
-                        }
-                    } else if (element.type === 'checkbox') {
-                        element.checked = value === '1' || value === true;
-                    } else if (!element.type.includes('file')) {
-                        element.value = value;
-                    }
-                });
-            }
-
-            // Handle Quill editor
-            if (formData.description) {
-                const quill = new Quill('#editor');
-                quill.root.innerHTML = formData.description;
-            }
-            
-            // Handle equipment checkboxes
-            if (formData.audio_multimedia) setEquipmentCheckboxes(formData.audio_multimedia);
-            if (formData.komfort) setEquipmentCheckboxes(formData.komfort);
-            if (formData.samochody_elektryczne) setEquipmentCheckboxes(formData.samochody_elektryczne);
-            if (formData.systemy_wspomagania) setEquipmentCheckboxes(formData.systemy_wspomagania);
-            if (formData.osiagi_tuning) setEquipmentCheckboxes(formData.osiagi_tuning);
-            if (formData.bezpieczenstwo) setEquipmentCheckboxes(formData.bezpieczenstwo);
         });
         <?php endif; ?>
     </script>
