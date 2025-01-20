@@ -3,26 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <title>DriveMarket</title>
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/index.css">
-    <link rel="stylesheet" href="styles/footer.css">
-    <link rel="stylesheet" href="styles/avatar.css">
-    <title>DriveMarket</title>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <a href="index.html"><div class="logo">DriveMarket</div></a>
-            <nav>
-                <div class="menu-main-links">
-                    <a href="templates/posts.php">Produkty</a>
-                    <a href="templates/about.php">O nas</a>
-                    <a href="templates/contact.php">Kontakt</a>
-                </div>
-            </nav>
-        </div>
+        <div class="logo">DriveMarket</div>
+        <nav class="menu">
+            <a href="#">Strona główna</a>
+            <a href="templates/posts.php">Produkty</a>
+            <a href="#">Kontakt</a>
+        </nav>
         <div class="auth-container">
             <div class="auth-buttons">
                 <a href="templates/login.php" class="auth-btn">Zaloguj się</a>
@@ -30,42 +23,13 @@
             </div>
             <div class="user-menu">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <div class="user-initial"></div>
-                    <img class="avatar-image" alt="User avatar">
+                    <span id="userInitials">A</span>
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="templates/profile.php">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        Profil
-                    </a>
-                    <a href="templates/create-listing.php">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        Dodaj ogłoszenie
-                    </a>
-                    <a href="templates/my-listings.php">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        Moje ogłoszenia
-                    </a>
-                    <button onclick="logout()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                        Wyloguj się
-                    </button>
+                    <a href="templates/profile.php">Profil</a>
+                    <a href="templates/create-listing.php">Dodaj ogłoszenie</a>
+                    <a href="templates/my-listings.php">Moje ogłoszenia</a>
+                    <button onclick="logout()">Wyloguj się</button>
                 </div>
             </div>
         </div>
@@ -73,168 +37,55 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-text">Witaj w DriveMarket</h1>
-            <p class="hero-subtext">Twój najlepszy sklep online z częściami samochodowymi</p>
-            <a href="templates/posts.php" class="cta-btn">Sprawdź naszą ofertę</a>
-        </div>
-        <div class="hero-bike">
-            <img src="images/motorcycle.svg" alt="Motorcycle" class="motorbike">
-        </div>
+        <div class="hero-box"></div>
+        <p class="hero-text">Witaj w DriveMarket – najlepszym sklepie online!</p>
+        <a href="#" class="cta-btn">Sprawdź naszą ofertę</a>
     </section>
 
     <!-- Services Section -->
     <section class="services">
-        <a href="templates/create-listing.php" class="service">
-            <div class="service-content">
-                <div class="service-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                </div>
-                <h3>Dodaj ogłoszenie</h3>
-                <p>Sprzedawaj swoje części samochodowe szybko i łatwo</p>
-                <span class="service-btn">Dodaj teraz</span>
-            </div>
-        </a>
-        <a href="templates/posts.php" class="service">
-            <div class="service-content">
-                <div class="service-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </div>
-                <h3>Przeglądaj części</h3>
-                <p>Znajdź części, których potrzebujesz</p>
-                <span class="service-btn">Przeglądaj</span>
-            </div>
-        </a>   
-        <a href="templates/contact.php" class="service">
-            <div class="service-content">
-                <div class="service-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                </div>
-                <h3>Kontakt</h3>
-                <p>Skontaktuj się z nami w razie pytań</p>
-                <span class="service-btn">Napisz do nas</span>
-            </div>
-        </a>
+        <div class="service">
+            <div class="service-box"></div>
+            <p>Usługa 1</p>
+            <button class="service-btn">Zobacz więcej</button>
+        </div>
+        <div class="service">
+            <div class="service-box"></div>
+            <p>Usługa 2</p>
+            <button class="service-btn">Zobacz więcej</button>
+        </div>
+        <div class="service">
+            <div class="service-box"></div>
+            <p>Usługa 3</p>
+            <button class="service-btn">Zobacz więcej</button>
+        </div>
     </section>
 
-    <!-- About Us Section -->
-    <section class="about-section">
-        <div class="about-container">
-            <div class="about-content">
-                <h2>O nas</h2>
-                <p>DriveMarket to miejsce, gdzie pasja do motoryzacji łączy się z profesjonalizmem. Oferujemy szeroki wybór części samochodowych oraz fachowe doradztwo.</p>
-                <a href="templates/about.php" class="about-btn">Dowiedz się więcej</a>
-            </div>
-            <div class="about-image">
-                <img src="images/workshop.png" alt="Auto Workshop" />
-            </div>
-        </div>
-    </section>
-    
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>DriveMarket</h3>
-                <p>Twój najlepszy sklep online z częściami samochodowymi. Znajdź wszystko, czego potrzebujesz do swojego pojazdu.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Szybkie linki</h4>
-                <nav class="footer-links">
-                    <a href="#">Strona główna</a>
-                    <a href="templates/posts.php">Produkty</a>
-                    <a href="#">O nas</a>
-                    <a href="#">Kontakt</a>
-                </nav>
-            </div>
-            <div class="footer-section">
-                <h4>Wsparcie</h4>
-                <nav class="footer-links">
-                    <a href="#">FAQ</a>
-                    <a href="#">Polityka prywatności</a>
-                    <a href="#">Regulamin</a>
-                    <a href="#">Dostawa</a>
-                </nav>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
-        </div>
+        <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
     </footer>
 
     <script src="scripts/auth.js"></script>
-    <script src="scripts/menu.js"></script>
     <script>
+    // Додаємо такий самий код, як в profile.php
     document.addEventListener('DOMContentLoaded', async function() {
         try {
             const response = await fetch('handlers/get-user-data.php');
             const userData = await response.json();
             
-            const headerAvatar = document.querySelector('.avatar-circle');
-            const userInitial = headerAvatar.querySelector('.user-initial');
-            const avatarImage = headerAvatar.querySelector('.avatar-image');
-            
-            if (headerAvatar) {
-                if (userData.avatar_url) {
-                    avatarImage.src = userData.avatar_url;
-                    avatarImage.style.display = 'block';
-                    userInitial.style.display = 'none';
-                } else if (userData.user_name) {
-                    userInitial.textContent = userData.user_name.charAt(0).toUpperCase();
-                    userInitial.style.display = 'block';
-                    avatarImage.style.display = 'none';
+            if (userData.avatar_url) {
+                const headerAvatar = document.querySelector('.avatar-circle');
+                if (headerAvatar) {
+                    headerAvatar.innerHTML = `
+                        <img src="${userData.avatar_url}" 
+                             alt="User avatar"
+                             style="width: 100%; height: 100%; object-fit: cover;">`;
                 }
             }
         } catch (error) {
             console.error('Error:', error);
         }
-
-        // Add scroll animation for services
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.service').forEach(service => {
-            observer.observe(service);
-        });
     });
     </script>
 </body>

@@ -6,31 +6,29 @@
 
 .listing-container {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 2rem;
 }
 
 .listing-container h1 {
     font-size: 2rem;
     margin-bottom: 2rem;
-    color: #1e293b;
-    font-weight: 700;
+    color: #333;
 }
 
 .photos-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
     margin-bottom: 2rem;
 }
 
 .photo-item {
     aspect-ratio: 4/3;
     overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .photo-item img {
@@ -47,11 +45,10 @@
 .no-photos {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    color: #64748b;
-    font-size: 1.1rem;
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
 }
 
 .listing-info {
@@ -60,89 +57,65 @@
 }
 
 .price-section, .details-section {
-    background: #f8fafc;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
 }
 
 .price-section h2, .details-section h2 {
-    color: #1e293b;
-    margin-bottom: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
     font-size: 1.5rem;
-    font-weight: 600;
 }
 
 .price {
-    font-size: 2.5rem;
-    color: #2563eb;
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-}
-
-.price strong {
-    font-weight: 700;
-}
-
-.price-type {
-    font-size: 1rem;
-    color: #64748b;
+    font-size: 2rem;
+    color: #2c3e50;
 }
 
 .details-grid {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
 }
 
 .detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 1rem;
+    align-items: baseline;
 }
 
 .detail-item.full-width {
     grid-column: 1 / -1;
+    grid-template-columns: 1fr;
 }
 
 .label {
-    font-weight: 500;
-    color: #64748b;
-    font-size: 0.9rem;
+    font-weight: bold;
+    color: #666;
 }
 
 .value {
-    color: #1e293b;
-    font-size: 1.1rem;
+    color: #333;
 }
 
 .description {
-    line-height: 1.8;
-    color: #334155;
+    margin-top: 0.5rem;
+    line-height: 1.6;
+    color: #333;
     white-space: pre-line;
 }
 
-.equipment-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
+/* Add styles for the post links in posts.php */
+.post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
 }
 
-.equipment-item {
-    background: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    color: #1e293b;
-    border: 1px solid #e2e8f0;
-}
-
-.contact-phone {
-    color: #2563eb;
-    font-weight: 600;
-    font-size: 1.2rem;
+.post-link:hover {
+    transform: translateY(-2px);
 }
 
 /* Responsive design */
@@ -152,56 +125,15 @@
     }
 
     .listing-container {
-        padding: 1.5rem;
-    }
-
-    .photos-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
-    }
-
-    .price-section, .details-section {
-        padding: 1.5rem;
-    }
-
-    .details-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .price {
-        font-size: 2rem;
-    }
-
-    .listing-container h1 {
-        font-size: 1.75rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .listing-container {
         padding: 1rem;
     }
 
-    .photos-gallery {
+    .detail-item {
         grid-template-columns: 1fr;
+        gap: 0.25rem;
     }
 
-    .price-section, .details-section {
-        padding: 1rem;
-    }
-
-    .price {
-        font-size: 1.75rem;
-    }
-
-    .equipment-list {
-        gap: 0.5rem;
-    }
-
-    .equipment-item {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
+    .photos-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 }

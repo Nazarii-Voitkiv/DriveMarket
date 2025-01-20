@@ -1,64 +1,138 @@
-/* Profile Styles */
-:root {
-    --profile-spacing: 2rem;
-    --card-border-radius: 1rem;
-    --transition-base: all 0.3s ease;
+/* Загальні стилі для сторінки профілю */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+    padding: 0;
+    color: #333;
 }
 
 .profile-container {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 2rem auto;
-    background: var(--white);
-    border-radius: var(--card-border-radius);
-    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-/* Profile Header */
-.profile-header {
-    position: relative;
-    background: var(--white);
-    padding-bottom: 2rem;
+.profile-info {
+    display: grid;
+    gap: 2rem;
 }
 
-.profile-cover {
-    height: 200px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    position: relative;
-    overflow: hidden;
+.info-section {
+    padding: 2rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
 }
 
-.profile-cover::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+h1 {
+    color: #1f2937;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.profile-avatar-wrapper {
-    position: relative;
-    margin-top: -75px;
-    padding: 0 var(--profile-spacing);
+h2 {
+    color: #2563eb;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #3b82f6;
+    display: inline-block;
+}
+
+.info-item {
     display: flex;
-    align-items: flex-end;
-    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
 }
 
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.label {
+    font-weight: 600;
+    color: #374151;
+}
+
+.value {
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+.editable-field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edit-btn {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.edit-btn:hover {
+    background: #2563eb;
+}
+
+.edit-form input {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.edit-form button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.edit-form #saveNameBtn {
+    background: #10b981;
+    color: white;
+}
+
+.edit-form #saveNameBtn:hover {
+    background: #059669;
+}
+
+.edit-form #cancelNameBtn {
+    background: #ef4444;
+    color: white;
+}
+
+.edit-form #cancelNameBtn:hover {
+    background: #dc2626;
+}
+
+/* Аватар */
 .avatar-preview {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    background: var(--white);
+    background: #e5e7eb;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 4px solid var(--white);
-    box-shadow: var(--shadow-md);
-    position: relative;
+    margin-bottom: 1rem;
+    border: 2px solid #3b82f6;
 }
 
 .avatar-preview img {
@@ -67,287 +141,102 @@
     object-fit: cover;
 }
 
-.avatar-upload {
-    margin-bottom: 1rem;
-}
-
-.upload-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--white);
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: var(--transition-base);
-}
-
-.upload-label:hover {
-    background: var(--primary-color);
-    color: var(--white);
-}
-
-.upload-label svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* Avatar Upload Form */
 .avatar-form {
-    margin-top: 1rem; 
-}
-
-.avatar-form .form-group {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .avatar-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.avatar-form input[type="file"] {
-    display: none; /* Ensure the file input is visible */
-    padding: 0.5rem;
-    border: 1px solid var(--text-light);
-    border-radius: 0.5rem;
-}
-
-.avatar-form button[type="submit"] {
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.avatar-form button[type="submit"]:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Profile Content */
-.profile-content {
-    padding: var(--profile-spacing);
-}
-
-.profile-section {
-    background: var(--white);
-    border-radius: var(--card-border-radius);
-    overflow: hidden;
-    margin-bottom: 2rem;
-}
-
-.profile-section:last-child {
-    margin-bottom: 0;
-}
-
-.section-header {
-    padding: 1.5rem var(--profile-spacing);
-    border-bottom: 1px solid var(--background-light);
-}
-
-.section-header h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--text-dark);
-    font-size: 1.25rem;
     font-weight: 600;
-    margin: 0;
+    color: #374151;
 }
 
-.section-header svg {
-    color: var(--primary-color);
+.avatar-form input {
+    padding: 0.7rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
-.info-grid {
-    padding: var(--profile-spacing);
-    display: grid;
-    gap: 1.5rem;
-}
-
-.info-item {
-    display: grid;
-    gap: 0.5rem;
-}
-
-.info-label {
-    font-size: 0.875rem;
-    color: var(--text-light);
-    font-weight: 500;
-}
-
-.info-value {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--text-dark);
-    font-weight: 500;
-}
-
-.edit-btn {
-    padding: 0.25rem;
-    background: none;
+.avatar-form button {
+    background: #3b82f6;
+    color: #fff;
     border: none;
-    color: var(--text-light);
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: var(--transition-base);
-    border-radius: 0.25rem;
+    transition: background 0.3s ease;
 }
 
-.edit-btn:hover {
-    color: var(--primary-color);
-    background: var(--background-light);
+.avatar-form button:hover {
+    background: #2563eb;
 }
 
-.edit-form {
-    margin-top: 1rem;
-}
-
-.edit-form input {
-    width: 100%;
-    height: 42px;
-    padding: 0 1rem;
-    border: 1px solid var(--background-light);
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    transition: var(--transition-base);
-    margin-bottom: 0.5rem;
-}
-
-.edit-form input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.edit-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin: 0;
-}
-
-.edit-actions button {
-    height: 42px;
-    padding: 0 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-base);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-}
-
-.save-btn {
-    background: var(--primary-color);
-    color: var(--white);
-    border: none;
-}
-
-.save-btn:hover {
-    background: var(--primary-dark);
-}
-
-.cancel-btn {
-    background: var(--white);
-    color: var(--text-dark);
-    border: 1px solid var(--background-light);
-}
-
-.cancel-btn:hover {
-    background: var(--background-light);
-}
-
-/* Password Section */
+/* Секція пароля */
 .password-section {
-    padding: var(--profile-spacing);
+    padding: 2rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.password-notice {
+    background: #fffbeb;
+    color: #92400e;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #fbbf24;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
 .password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     max-width: 400px;
 }
 
-.form-group {
-    margin-bottom: 1rem;
+.password-form input {
+    padding: 0.7rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--text-light);
-    font-weight: 500;
+.password-form button {
+    background: #10b981;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--background-light);
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    transition: var(--transition-base);
+.password-form button:hover {
+    background: #059669;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* Responsive Design */
+/* Для мобільних пристроїв */
 @media (max-width: 768px) {
     .profile-container {
-        margin: 0;
-        border-radius: 0;
-    }
-
-    .profile-cover {
-        height: 150px;
-    }
-
-    .profile-avatar-wrapper {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .avatar-preview {
-        width: 120px;
-        height: 120px;
-    }
-
-    .section-header {
         padding: 1rem;
     }
 
-    .info-grid {
+    .info-section, .password-section {
         padding: 1rem;
     }
-}
 
-@media (max-width: 480px) {
-    .profile-cover {
-        height: 120px;
+    h1 {
+        font-size: 1.8rem;
     }
 
-    .avatar-preview {
-        width: 100px;
-        height: 100px;
-    }
-
-    .edit-actions {
-        flex-direction: column;
-    }
-
-    .edit-actions button {
-        width: 100%;
+    h2 {
+        font-size: 1.4rem;
     }
 }

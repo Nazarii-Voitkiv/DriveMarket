@@ -6,12 +6,10 @@ $config = include('../config.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// Wy wietlamy informacj  o rozpocz ciu przetwarzania formularza
 error_log("Starting form processing...");
 error_log("POST data: " . print_r($_POST, true));
 error_log("FILES data: " . print_r($_FILES, true));
 
-// Sprawdzamy, czy u ytkownik jest zalogowany
 if (!isset($_COOKIE['token'])) {
     header('Location: ../templates/login.php');
     exit();
@@ -40,20 +38,10 @@ try {
         $config['db_password'],
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-    
-    // Alter the images column to be MEDIUMTEXT
-    try {
-        $alterSql = "ALTER TABLE listings MODIFY COLUMN images MEDIUMTEXT";
-        $connect->exec($alterSql);
-        error_log("Successfully altered images column to MEDIUMTEXT");
-    } catch (PDOException $e) {
-        error_log("Failed to alter images column: " . $e->getMessage());
-    }
 } catch (PDOException $e) {
-    die("B  d pod czasu  czenia do bazy danych: " . $e->getMessage());
+    die("Помилка підключення до БД: " . $e->getMessage());
 }
 
-// Funkcja boolFromRadio sprawdza, czy radio jest zaznaczone, i zwraca 1, je eli tak, a 0, je eli nie
 function boolFromRadio($value) {
     error_log("Processing radio value: " . print_r($value, true));
 
@@ -67,54 +55,40 @@ function boolFromRadio($value) {
     return $result;
 }
 
-// Funkcja cleanText czysci tekst z HTML-entit i dodatkowych znak w
+// Функція для очищення тексту
 function cleanText($text) {
-    // Wyjmujemy HTML-entit i
+    // Видаляємо HTML-сутності
     $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    // Zamieniamy wiele spacji na jeden
+    // Замінюємо множинні пробіли на один
     $text = preg_replace('/\s+/', ' ', $text);
-    // Usuwamy spacje na pocz tku i na ko cu
+    // Видаляємо пробіли на початку і в кінці
     return trim($text);
 }
 
-// Wy wietlamy POST dane
+// Логуємо POST дані
 error_log("POST data received: " . print_r($_POST, true));
-// Zbieramy dane bazowe
-// Tytu  og oszenia
+
+// Збираємо базові дані
 $title = cleanText($_POST['title'] ?? '');
-// Opis og oszenia
 $description = cleanText($_POST['description'] ?? '');
-// Marka samochodu
 $brand = $_POST['brand'] ?? '';
-// Model samochodu
 $model = $_POST['model'] ?? '';
-// Wersja samochodu
 $version = $_POST['version'] ?? '';
-// Generacja samochodu
 $generation = !empty($_POST['generation']) ? $_POST['generation'] : null;
-// Rok produkcji
 $prod_year = (int)($_POST['prod_year'] ?? 0);
-// Przebieg (w km)
 $mileage = (int)($_POST['mileage'] ?? 0);
-// Numer VIN
 $vin = $_POST['vin'] ?? '';
-// Numer rejestracyjny
 $reg_number = $_POST['reg_number'] ?? '';
-// Czy chcemy ukry  informacje o rejestracji
 $hide_reg_info = isset($_POST['hide_reg_info']) ? 1 : 0;
 
-// Data pierwszej rejestracji
-// Dzie 
+// Дата першої реєстрації
 $first_reg_day = $_POST['first_reg_date_day'] ?? '';
-// Miesi c
 $first_reg_month = $_POST['first_reg_date_month'] ?? '';
-// Rok
 $first_reg_year = $_POST['first_reg_date_year'] ?? '';
-// Data pierwszej rejestracji (w formacie YYYY-MM-DD)
 $first_registration = null;
 
 if (!empty($first_reg_year) && !empty($first_reg_month) && !empty($first_reg_day)) {
-    // Walidacja daty
+    // Валідація дати
     if (checkdate((int)$first_reg_month, (int)$first_reg_day, (int)$first_reg_year)) {
         $first_registration = sprintf(
             '%04d-%02d-%02d',
@@ -128,25 +102,25 @@ if (!empty($first_reg_year) && !empty($first_reg_month) && !empty($first_reg_day
     }
 }
 
-// Walidacja VIN
+// Валідація VIN
 if (!empty($vin) && strlen($vin) !== 17) {
     header('Location: ../templates/create-listing.php?error=1&message=' . urlencode('Nieprawidłowy numer VIN'));
     exit();
 }
 
-// Walidacja przebiegu
+// Валідація пробігу
 if ($mileage < 0) {
     header('Location: ../templates/create-listing.php?error=1&message=' . urlencode('Przebieg nie może być ujemny'));
     exit();
 }
 
-// Walidacja numeru rejestracyjnego
+// Валідація реєстраційного номера
 if (!empty($reg_number) && !preg_match('/^[A-Z0-9]{2,8}$/', strtoupper($reg_number))) {
     header('Location: ../templates/create-listing.php?error=1&message=' . urlencode('Nieprawidłowy numer rejestracyjny'));
     exit();
 }
 
-// Specyfikacje techniczne
+// Технічні характеристики
 $engine_capacity = !empty($_POST['engine_capacity']) ? (int)$_POST['engine_capacity'] : null;
 $fuel_type = $_POST['fuel_type'] ?? '';
 $power = (int)($_POST['power'] ?? 0);
@@ -160,18 +134,18 @@ $color_type = !empty($_POST['color_type']) ? $_POST['color_type'] : null;
 $right_hand_drive = isset($_POST['right_hand_drive']) ? 1 : null;
 $co2_emission = !empty($_POST['co2_emission']) ? (int)$_POST['co2_emission'] : null;
 
-// Dane sprzedawcy
+// Дані продавця
 $seller_phone = !empty($_POST['seller_phone']) ? $_POST['seller_phone'] : null;
 $seller_location = $_POST['seller_location'] ?? '';
 $kraj_pochodzenia = !empty($_POST['kraj_pochodzenia']) ? $_POST['kraj_pochodzenia'] : null;
 
-// Logowanie wartości seller_location
-error_log("seller_location z POST: " . print_r($seller_location, true));
+// Логуємо значення seller_location
+error_log("seller_location from POST: " . print_r($seller_location, true));
 
-// Przyciski radiowe (z logowaniem)
-error_log("Przetwarzanie przycisków radiowych...");
-error_log("damaged surowa wartość: " . ($_POST['damaged'] ?? 'nie ustawiona'));
-error_log("imported surowa wartość: " . ($_POST['imported'] ?? 'nie ustawiona'));
+// Радіо-кнопки (з логуванням)
+error_log("Processing radio buttons...");
+error_log("damaged raw value: " . ($_POST['damaged'] ?? 'not set'));
+error_log("imported raw value: " . ($_POST['imported'] ?? 'not set'));
 
 $damaged = boolFromRadio($_POST['damaged'] ?? null);
 $imported = boolFromRadio($_POST['imported'] ?? null);
@@ -187,16 +161,16 @@ error_log("Converted values:");
 error_log("damaged: " . $damaged);
 error_log("imported: " . $imported);
 
-// Gwarancja - przetwarzanie danych dotyczących gwarancji
+// Гарантія
 $gwarancja_dzien = !empty($_POST['gwarancja_dzien']) ? (int)$_POST['gwarancja_dzien'] : null;
 $gwarancja_miesiac = !empty($_POST['gwarancja_miesiac']) ? (int)$_POST['gwarancja_miesiac'] : null;
 $gwarancja_rok = !empty($_POST['gwarancja_rok']) ? (int)$_POST['gwarancja_rok'] : null;
 $gwarancja_przebieg = !empty($_POST['gwarancja_przebieg']) ? (int)$_POST['gwarancja_przebieg'] : null;
 
-// Sprzęt - przetwarzanie danych dotyczących sprzętu
+// Обладнання
 $allEquipment = $_POST['equipment'] ?? [];
 
-// Listy kategorii sprzętu
+// Списки категорій обладнання
 $audioMultimediaList = [
     'apple_carplay', 'android_auto', 'bluetooth', 'radio', 'speakers',
     'usb', 'wireless_charging', 'navigation', 'sound_system', 'head_up',
@@ -258,12 +232,13 @@ $bezpieczenstwoList = [
     'kurtyny_przod', 'poduszki_czolowe_tyl', 'boczne_poduszki_przod',
     'boczne_poduszki_tyl', 'poduszka_pasow', 'system_dachowania'
 ];
-// Funkcja kategoryzacji sprzętu
+
+// Функція категоризації обладнання
 function categorizeEquipment($allEquipment, $categoryList) {
     return array_values(array_intersect($allEquipment, $categoryList));
 }
 
-// Kategoryzacja sprzętu
+// Категоризуємо обладнання
 $audio_multimedia = categorizeEquipment($allEquipment, $audioMultimediaList);
 $komfort = categorizeEquipment($allEquipment, $komfortList);
 $samochody_elektryczne = categorizeEquipment($allEquipment, $samochodyElektryczneList);
@@ -271,99 +246,66 @@ $systemy_wspomagania = categorizeEquipment($allEquipment, $systemyWspomaganiaLis
 $osiagi_tuning = categorizeEquipment($allEquipment, $osiagiTuningList);
 $bezpieczenstwo = categorizeEquipment($allEquipment, $bezpieczenstwoList);
 
-// Funkcja do obsługi przesyłania obrazów
-function handleImageUploads($files) {
-    error_log("Rozpoczynanie funkcji handleImageUploads");
-    error_log("Tablica plików: " . print_r($files, true));
+// Обробка зображень
+$images = [];
 
-    $uploadedImages = [];
-    $targetDir = dirname(__DIR__) . "/images/listings/";
-
-    // Sprawdzenie czy istnieje katalog, jeśli nie - tworzymy
-    if (!file_exists($targetDir)) {
-        error_log("Tworzenie katalogu: " . $targetDir);
-        mkdir($targetDir, 0777, true);
-    }
-
-    if (!isset($files['photos']) || empty($files['photos']['tmp_name'][0])) {
-        error_log("Nie znaleziono zdjęć w tablicy plików");
-        return $uploadedImages;
-    }
-
-    foreach ($files['photos']['tmp_name'] as $key => $tmp_name) {
-        error_log("Przetwarzanie pliku: " . $files['photos']['name'][$key]);
-        error_log("Tymczasowa nazwa: " . $tmp_name);
-        error_log("Kod błędu przesyłania: " . $files['photos']['error'][$key]);
-
-        if ($files['photos']['error'][$key] === UPLOAD_ERR_OK) {
-            $fileName = uniqid() . '_' . basename($files['photos']['name'][$key]);
-            $targetFile = $targetDir . $fileName;
-
-            error_log("Plik docelowy: " . $targetFile);
-
-            // Sprawdzenie, czy to faktycznie obraz
-            $check = getimagesize($tmp_name);
-            if ($check !== false) {
-                error_log("Plik jest obrazem - " . $check["mime"]);
-
-                // Sprawdzenie rozmiaru pliku (maksymalnie 5MB)
-                if ($files['photos']['size'][$key] <= 5000000) {
-                    if (move_uploaded_file($tmp_name, $targetFile)) {
-                        error_log("Plik pomyślnie przesłany do: " . $targetFile);
-                        $uploadedImages[] = 'images/listings/' . $fileName;
-                    } else {
-                        error_log("Nie udało się przenieść przesłanego pliku. Błąd: " . error_get_last()['message']);
-                        error_log("Aktualne uprawnienia do katalogu docelowego: " . substr(sprintf('%o', fileperms($targetDir)), -4));
-                        error_log("Aktualny użytkownik: " . get_current_user());
-                        error_log("Użytkownik procesu PHP: " . posix_getpwuid(posix_geteuid())['name']);
-                    }
-                } else {
-                    error_log("Plik za duży: " . $files['photos']['size'][$key]);
-                }
-            } else {
-                error_log("Plik nie jest obrazem");
+// При редагуванні, спочатку зберігаємо існуючі зображення
+if ($isEditing && isset($_POST['existing_images']) && is_string($_POST['existing_images'])) {
+    $existingImages = json_decode($_POST['existing_images'], true);
+    if (is_array($existingImages)) {
+        foreach ($existingImages as $image) {
+            if (isset($image['id']) && isset($image['type']) && isset($image['data'])) {
+                $images[] = $image; // Додаємо існуючі зображення в тому ж порядку
             }
-        } else {
-            error_log("Wystąpił błąd przesyłania: " . $files['photos']['error'][$key]);
         }
     }
-
-    error_log("Tablica przesłanych obrazów: " . print_r($uploadedImages, true));
-    return $uploadedImages;
 }
 
-// Przetwarzanie przesłanych obrazów
-$images = [];
-error_log("METODA ŻĄDANIA: " . $_SERVER['REQUEST_METHOD']);
-error_log("TYP ZAWARTOŚCI: " . $_SERVER['CONTENT_TYPE']);
-error_log("Zawartość tablicy POST: " . print_r($_POST, true));
-error_log("Zawartość tablicy FILES: " . print_r($_FILES, true));
+// Обробка нових зображень
+if (!empty($_FILES['photos']['name'][0])) {
+    $newImages = [];
+    foreach ($_FILES['photos']['tmp_name'] as $key => $tmpName) {
+        // Перевірка на помилки завантаження
+        if ($_FILES['photos']['error'][$key] !== UPLOAD_ERR_OK) {
+            continue;
+        }
 
-if (isset($_FILES['photos']) && !empty($_FILES['photos']['name'][0])) {
-    error_log("Przetwarzanie zdjęć...");
-    error_log("Szczegóły zdjęć:");
-    error_log("Nazwa: " . print_r($_FILES['photos']['name'], true));
-    error_log("Typ: " . print_r($_FILES['photos']['type'], true));
-    error_log("Tymczasowa nazwa: " . print_r($_FILES['photos']['tmp_name'], true));
-    error_log("Błąd: " . print_r($_FILES['photos']['error'], true));
-    error_log("Rozmiar: " . print_r($_FILES['photos']['size'], true));
-    
-    $images = handleImageUploads($_FILES);
-    error_log("Przetworzone obrazy: " . print_r($images, true));
-} else {
-    error_log("Nie znaleziono zdjęć w żądaniu");
-    if (!isset($_FILES['photos'])) {
-        error_log("Klucz 'photos' nie znaleziony w tablicy FILES");
-    } else if (empty($_FILES['photos']['name'][0])) {
-        error_log("Brak nazwy pliku w pierwszym elemencie");
+        // Перевірка типу файлу
+        $mimeType = $_FILES['photos']['type'][$key];
+        if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+            continue;
+        }
+
+        // Перевірка розміру файлу (максимум 5MB)
+        if ($_FILES['photos']['size'][$key] > 5 * 1024 * 1024) {
+            continue;
+        }
+
+        // Читаємо файл і конвертуємо в base64
+        $imageData = file_get_contents($tmpName);
+        $base64Data = base64_encode($imageData);
+
+        // Додаємо нове зображення в масив нових зображень
+        $newImages[] = [
+            'id' => uniqid(),
+            'type' => $mimeType,
+            'data' => $base64Data
+        ];
     }
+
+    // Видаляємо останнє зображення з нових
+    if (!empty($newImages)) {
+        array_pop($newImages);
+    }
+
+    // Додаємо оброблені нові зображення до існуючих
+    $images = array_merge($images, $newImages);
 }
 
-// Konwertuj tablicę obrazów na JSON
-$images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
-error_log("Końcowy images_json: " . $images_json);
+// Конвертуємо масив зображень в JSON для збереження в БД
+$imagesJson = json_encode($images);
 
-// Dodaj przetwarzanie selektorów komfortu i systemów wspomagania
+// Додаємо обробку селектів комфорту та систем допомоги
 $klimatyzacja = !empty($_POST['klimatyzacja']) && $_POST['klimatyzacja'] !== 'none' ? $_POST['klimatyzacja'] : null;
 $rozkladany_dach = !empty($_POST['rozkladany_dach']) && $_POST['rozkladany_dach'] !== 'none' ? $_POST['rozkladany_dach'] : null;
 $otwierany_dach = !empty($_POST['otwierany_dach']) && $_POST['otwierany_dach'] !== 'none' ? $_POST['otwierany_dach'] : null;
@@ -374,14 +316,14 @@ $reflektory = !empty($_POST['reflektory']) && $_POST['reflektory'] !== 'none' ? 
 $felgi = !empty($_POST['felgi']) && $_POST['felgi'] !== 'none' ? $_POST['felgi'] : null;
 $opony = !empty($_POST['opony']) && $_POST['opony'] !== 'none' ? $_POST['opony'] : null;
 
-// Cena i waluta
+// Ціна та валюта
 $price_type = $_POST['price_type'] ?? 'brutto';
 $price = (float)($_POST['price'] ?? 0);
 $currency = $_POST['currency'] ?? 'PLN';
 
-// Zapytanie SQL
+// SQL запит
 if ($isEditing) {
-    // Sprawdzanie uprawnień do edycji
+    // Перевірка прав на редагування
     $stmtCheck = $connect->prepare("SELECT listing_id FROM listings WHERE listing_id = :id AND user_id = :uid LIMIT 1");
     $stmtCheck->execute(['id' => $listing_id, 'uid' => $user_id]);
     
@@ -485,7 +427,7 @@ if ($isEditing) {
 
 $stmt = $connect->prepare($sql);
 
-// Przypinanie parametrów
+// Прив'язуємо параметри
 $params = [
     ':user_id' => $user_id,
     ':title' => $title,
@@ -543,47 +485,39 @@ $params = [
     ':seller_phone' => $seller_phone,
     ':seller_location' => $seller_location,
     ':kraj_pochodzenia' => $kraj_pochodzenia,
-    ':images' => $images_json,
+    ':images' => $imagesJson,
     ':price_type' => $price_type,
     ':price' => $price,
     ':currency' => $currency
 ];
 
-// Jeśli edytujemy, dodajemy listing_id i user_id do parametrów
 if ($isEditing) {
     $params[':listing_id'] = $listing_id;
-    $params[':user_id'] = $user_id; 
+    $params[':user_id'] = $user_id; // Додаємо user_id для умови WHERE
 }
 
-// Logowanie końcowych wartości przed zapisaniem
+// Логуємо фінальні значення перед збереженням
 error_log("Final values before save:");
 error_log("damaged: " . $params[':damaged']);
 error_log("imported: " . $params[':imported']);
 
 try {
-    // Wykonujemy zapytanie SQL z parametrami
     error_log("Executing SQL query with params: " . print_r($params, true));
     $stmt->execute($params);
     
-    // Sprawdzamy, czy zapytanie wpłynęło na jakiekolwiek wiersze
     if ($stmt->rowCount() > 0) {
-        // Konfigurujemy URL przekierowania w przypadku sukcesu
         $redirectUrl = '../templates/my-listings.php?success=1';
         if ($isEditing) {
-            // Jeśli edytowano, dodajemy odpowiedni komunikat
             $redirectUrl .= '&message=' . urlencode('Ogłoszenie zostało zaktualizowane');
         } else {
-            // Jeśli dodano nowe ogłoszenie, dodajemy odpowiedni komunikat
             $redirectUrl .= '&message=' . urlencode('Ogłoszenie zostało dodane');
         }
     } else {
-        // Jeśli nie ma wpłyniętych wierszy, logujemy i przygotowujemy URL błędu
         error_log("No rows affected. SQL: " . $sql);
         error_log("Params: " . print_r($params, true));
         $redirectUrl = '../templates/create-listing.php?error=1&message=' . urlencode('Nie udało się zapisać ogłoszenia');
     }
 } catch (PDOException $e) {
-    // Obsługa błędów SQL: logowanie i przygotowanie URL błędu
     error_log("SQL Error: " . $e->getMessage());
     error_log("SQL State: " . $e->getCode());
     error_log("SQL Query: " . $sql);
@@ -591,6 +525,5 @@ try {
     $redirectUrl = '../templates/create-listing.php?error=1&message=' . urlencode('Błąd podczas zapisywania ogłoszenia: ' . $e->getMessage());
 }
 
-// Przekierowanie do odpowiedniego URL
 header('Location: ' . $redirectUrl);
 exit();

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const response = await fetch('../handlers/get-user-data.php');
         const userData = await response.json();
         
-        // Sprawdzenie, czy awatar użytkownika jest dostępny
         if (userData.avatar_url) {
             const headerAvatar = document.querySelector('.avatar-circle');
             if (headerAvatar) {
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error:', error);
     }
 
-    // Pobieranie elementów DOM dla różnych filtrów
     const markaSelect = document.getElementById('marka');
     const modelSelect = document.getElementById('model');
     const generacjaSelect = document.getElementById('generacja');
@@ -31,19 +29,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     const rokDoSelect = document.getElementById('rok_do');
     const przebiegOdInput = document.getElementById('przebieg_od');
     const przebiegDoInput = document.getElementById('przebieg_do');
-    const sortSelect = document.getElementById('sortowanie');
 
-    // Wyłączenie niektórych selektorów na początku
     modelSelect.disabled = true;
     generacjaSelect.disabled = true;
 
-    // Pobieranie elementów do obsługi modalnego okna statusu
+
     const statusSection = document.getElementById('statusSection');
     const statusModal = document.getElementById('statusModal');
     const closeModal = document.querySelector('.close-modal');
     const statusCheckboxes = document.querySelectorAll('.status-option input[type="checkbox"]');
 
-    // Obsługa otwierania modalnego okna przy kliknięciu
+    // Відкриття модального вікна при кліку на секцію статусу
     if (statusSection) {
         statusSection.addEventListener('click', function(e) {
             e.preventDefault();
@@ -51,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Obsługa zamykania modalnego okna przy kliknięciu w przycisk zamykania
+    // Закриття модального вікна при кліку на хрестик
     if (closeModal) {
         closeModal.addEventListener('click', function(e) {
             e.preventDefault();
@@ -59,32 +55,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Zamykanie modalnego okna przy kliknięciu poza nim
+    // Закриття модального вікна при кліку поза ним
     window.addEventListener('click', function(event) {
         if (event.target === statusModal) {
             statusModal.classList.remove('show');
         }
     });
 
-    // Zatrzymanie propagacji kliknięcia wewnątrz modalnego okna
+    // Зупинка події кліку всередині модального вікна
     if (statusModal) {
         statusModal.querySelector('.modal-content').addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
 
-    // Obsługa zmiany stanu checkboxów
+    // Обробка зміни чекбоксів
     statusCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             updateListings();
         });
     });
 
-    // Funkcja do aktualizacji listy ogłoszeń
+    // Функція для оновлення списку оголошень
     async function updateListings() {
         const params = new URLSearchParams();
 
-        // Dodawanie podstawowych parametrów
+        // Додаємо базові параметри
         if (markaSelect.value) params.append('marka', markaSelect.value);
         if (modelSelect.value) params.append('model', modelSelect.value);
         if (generacjaSelect.value) params.append('generacja', generacjaSelect.value);
@@ -92,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (rodzajPaliwaSelect.value) params.append('rodzaj_paliwa', rodzajPaliwaSelect.value);
         if (krajPochodzenia.value) params.append('kraj_pochodzenia', krajPochodzenia.value);
 
-        // Dodawanie wybranych statusów
+        // Додаємо вибрані статуси
         const selectedStatuses = Array.from(statusCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
@@ -101,12 +97,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             params.append('status', JSON.stringify(selectedStatuses));
         }
 
-        // Dodawanie parametru stanu uszkodzenia
+        // Додаємо параметр стану пошкодження, якщо вибрано конкретне значення
         if (stanUskodzeniaSelect.value && stanUskodzeniaSelect.value !== 'dowolny') {
             params.append('damaged', stanUskodzeniaSelect.value);
         }
 
-        // Dodawanie parametrów ceny
+        // Додаємо параметри ціни, якщо вони вказані
         if (cenaOdInput.value) {
             params.append('cena_od', cenaOdInput.value);
         }
@@ -114,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             params.append('cena_do', cenaDoInput.value);
         }
 
-        // Dodawanie parametrów roku
+        // Додаємо параметри року
         if (rokOdSelect.value) {
             params.append('rok_od', rokOdSelect.value);
         }
@@ -122,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             params.append('rok_do', rokDoSelect.value);
         }
 
-        // Dodawanie parametrów przebiegu
+        // Додаємо параметри пробігу
         if (przebiegOdInput.value) {
             params.append('przebieg_od', przebiegOdInput.value);
         }
@@ -130,18 +126,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             params.append('przebieg_do', przebiegDoInput.value);
         }
 
-        // Dodawanie parametru sortowania
-        if (sortSelect.value) {
-            params.append('sort', sortSelect.value);
-        }
-
         try {
             const response = await fetch(`../handlers/get-filtered-listings.php?${params.toString()}`);
             const listings = await response.json();
             
-            // Aktualizacja kontenera z ogłoszeniami
+            // Оновлюємо контейнер з оголошеннями
             const container = document.querySelector('.post-container');
-            container.innerHTML = ''; // Czyszczenie kontenera
+            container.innerHTML = ''; // Очищаємо контейнер
 
             if (listings.length > 0) {
                 listings.forEach(listing => {
@@ -152,13 +143,13 @@ document.addEventListener('DOMContentLoaded', async function() {
                 container.innerHTML = '<p>Brak ogłoszeń do wyświetlenia.</p>';
             }
         } catch (error) {
-            console.error('Pomysł ładowania ogłoszeń:', error);
+            console.error('Помилка завантаження оголошень:', error);
             const container = document.querySelector('.post-container');
             container.innerHTML = '<p>Nie udało się załadować ogłoszeń.</p>';
         }
     }
 
-    // Funkcja do tworzenia elementu ogłoszenia
+    // Функція для створення елемента оголошення
     function createPostElement(listing) {
         const postLink = document.createElement('a');
         postLink.href = `listing-details.php?id=${listing.listing_id}`;
@@ -167,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const postDiv = document.createElement('div');
         postDiv.className = 'post';
 
-        // Dodawanie obrazu
+        // Додаємо зображення
         const postBox = document.createElement('div');
         postBox.className = 'post-box';
 
@@ -175,33 +166,37 @@ document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const images = JSON.parse(listing.images);
                 if (images && images.length > 0) {
-                    const img = document.createElement('img');
-                    img.src = '../' + images[0];
-                    img.alt = 'Zdjęcie pojazdu';
-                    postBox.appendChild(img);
+                    const firstImage = images[0];
+                    if (firstImage.data && firstImage.type) {
+                        const img = document.createElement('img');
+                        img.src = `data:${firstImage.type};base64,${firstImage.data}`;
+                        img.alt = 'Zdjęcie pojazdu';
+                        postBox.appendChild(img);
+                    } else {
+                        postBox.innerHTML = '<div class="no-image">Brak zdjęcia</div>';
+                    }
                 } else {
-                    postBox.innerHTML = '';
+                    postBox.innerHTML = '<div class="no-image">Brak zdjęcia</div>';
                 }
             } catch (e) {
-                console.error('Błąd parsowania obrazów:', e);
-                postBox.innerHTML = '';
+                postBox.innerHTML = '<div class="no-image">Brak zdjęcia</div>';
             }
         } else {
-            postBox.innerHTML = '';
+            postBox.innerHTML = '<div class="no-image">Brak zdjęcia</div>';
         }
 
         postDiv.appendChild(postBox);
 
-        // Dodawanie informacji o ogłoszeniu
+        // Додаємо інформацію про оголошення
         const postInfo = document.createElement('div');
         postInfo.className = 'post-info';
 
-        // Tytuł (marka + model)
+        // Заголовок (марка + модель)
         const title = document.createElement('h2');
         title.textContent = `${listing.brand} ${listing.model}`;
         postInfo.appendChild(title);
 
-        // Cena
+        // Ціна
         const priceTag = document.createElement('div');
         priceTag.className = 'price-tag';
         let price = parseFloat(listing.price || 0);
@@ -213,17 +208,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         postInfo.appendChild(priceTag);
 
-        // Rok produkcji
+        // Рік виробництва
         const yearP = document.createElement('p');
         yearP.innerHTML = `<strong>Rok:</strong> ${listing.prod_year || 'Brak danych'}`;
         postInfo.appendChild(yearP);
 
-        // Typ paliwa
+        // Тип палива
         const fuelP = document.createElement('p');
         fuelP.innerHTML = `<strong>Paliwo:</strong> ${listing.fuel_type || 'Brak danych'}`;
         postInfo.appendChild(fuelP);
 
-        // Przebieg
+        // Пробіг
         const mileageP = document.createElement('p');
         if (listing.mileage) {
             mileageP.innerHTML = `<strong>Przebieg:</strong> ${parseInt(listing.mileage).toLocaleString('pl-PL')} km`;
@@ -232,7 +227,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         postInfo.appendChild(mileageP);
 
-        // Stan
+        // Стан
         const damageP = document.createElement('p');
         if (listing.damaged === null) {
             damageP.innerHTML = `<strong>Stan:</strong> Dowolny`;
@@ -243,14 +238,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         postInfo.appendChild(damageP);
 
-        // Kraj pochodzenia
+        // Країна походження
         if (listing.kraj_pochodzenia) {
             const originP = document.createElement('p');
             originP.innerHTML = `<strong>Kraj pochodzenia:</strong> ${listing.kraj_pochodzenia.charAt(0).toUpperCase() + listing.kraj_pochodzenia.slice(1)}`;
             postInfo.appendChild(originP);
         }
 
-        // Kontakt telefoniczny
+        // Контактний телефон
         const phoneP = document.createElement('p');
         phoneP.innerHTML = `<strong>Kontakt:</strong> ${listing.seller_phone || 'Brak telefonu'}`;
         postInfo.appendChild(phoneP);
@@ -261,12 +256,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         return postLink;
     }
 
-    // Funkcja do walidacji przebiegu
+    // Функція для валідації пробігу
     function validateMileage(input) {
-        // Usuwanie wszystkich niecyfrowych znaków
+        // Видаляємо всі нецифрові символи
         let value = input.value.replace(/\D/g, '');
         
-        // Ograniczenie maksymalnej wartości
+        // Обмежуємо максимальне значення
         if (value > 9999999) {
             value = '9999999';
         }
@@ -274,13 +269,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         input.value = value;
     }
 
-    // Dodawanie obsługi zdarzeń dla filtrów
+    // Додаємо обробники подій для фільтрів
     markaSelect.addEventListener('change', async function() {
         const selectedMarka = this.value;
         modelSelect.disabled = !selectedMarka;
         generacjaSelect.disabled = true;
         
-        // Czyszczenie selektorów
+        // Очищаємо селекти
         modelSelect.innerHTML = '<option value="">Model pojazdu</option>';
         generacjaSelect.innerHTML = '<option value="">Generacja</option>';
         
@@ -296,7 +291,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     modelSelect.appendChild(option);
                 });
             } catch (error) {
-                console.error('Błąd ładowania modeli:', error);
+                console.error('Помилка завантаження моделей:', error);
             }
         }
         
@@ -308,7 +303,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const selectedMarka = markaSelect.value;
         generacjaSelect.disabled = !selectedModel;
         
-        // Czyszczenie selektora generacja
+        // Очищаємо селект generacja
         generacjaSelect.innerHTML = '<option value="">Generacja</option>';
         
         if (selectedModel && selectedMarka) {
@@ -326,19 +321,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                 } else {
                     const option = document.createElement('option');
                     option.value = "";
-                    option.textContent = "Brak dostępnych generacji";
+                    option.textContent = "Немає доступних генерацій";
                     option.disabled = true;
                     generacjaSelect.appendChild(option);
                 }
             } catch (error) {
-                console.error('Błąd ładowania generacji:', error);
+                console.error('Помилка завантаження генерацій:', error);
             }
         }
         
         updateListings();
     });
 
-    // Dodawanie obsługi zdarzeń dla wszystkich filtrów
+    // Додаємо обробники подій для всіх фільтрів
     generacjaSelect.addEventListener('change', updateListings);
     typNadwoziaSelect.addEventListener('change', updateListings);
     rodzajPaliwaSelect.addEventListener('change', updateListings);
@@ -347,18 +342,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     rokOdSelect.addEventListener('change', updateListings);
     rokDoSelect.addEventListener('change', updateListings);
 
-    // Dodawanie opóźnienia dla filtrowania po cenie i przebiegu
+    // Додаємо затримку для фільтрації за ціною та пробігом
     let filterTimeout;
     function handleFilterInput() {
         clearTimeout(filterTimeout);
         filterTimeout = setTimeout(updateListings, 500);
     }
 
-    // Dodawanie obsługi zdarzeń dla pól ceny
+    // Додаємо обробники для полів ціни
     cenaOdInput.addEventListener('input', handleFilterInput);
     cenaDoInput.addEventListener('input', handleFilterInput);
 
-    // Dodawanie obsługi zdarzeń dla pól przebiegu z walidacją
+    // Додаємо обробники для полів пробігу з валідацією
     przebiegOdInput.addEventListener('input', function() {
         validateMileage(this);
         handleFilterInput();
@@ -369,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         handleFilterInput();
     });
 
-    // Dodawanie walidacji dla roku "do", aby nie był mniejszy niż rok "od"
+    // Додаємо валідацію для року "до", щоб він не був менше ніж рік "від"
     rokOdSelect.addEventListener('change', function() {
         if (rokDoSelect.value && parseInt(rokDoSelect.value) < parseInt(this.value)) {
             rokDoSelect.value = this.value;
@@ -384,7 +379,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateListings();
     });
 
-    // Obsługa rozszerzonych filtrów
+    // Обробка розширених фільтрів
     const moreFiltersLink = document.querySelector('.more-filters-link');
     const extendedFilters = document.querySelector('.extended-filters');
     let filtersVisible = false;
@@ -396,21 +391,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (filtersVisible) {
             extendedFilters.style.display = 'block';
             moreFiltersLink.textContent = 'Ukryj filtry';
-            // Dodawanie klasy show po krótkim opóźnieniu dla animacji
+            // Додаємо клас show після короткої затримки для анімації
             setTimeout(() => {
                 extendedFilters.classList.add('show');
             }, 10);
         } else {
             extendedFilters.classList.remove('show');
             moreFiltersLink.textContent = 'Pokaż więcej filtrów';
-            // Ukrywanie elementu po zakończeniu animacji
+            // Приховуємо елемент після завершення анімації
             setTimeout(() => {
                 extendedFilters.style.display = 'none';
             }, 300);
         }
     });
 
-    // Obsługa kliknięć na nagłówki sekcji
+    // Обробка кліків по заголовках секцій
     const filterHeaders = document.querySelectorAll('.filter-header');
     filterHeaders.forEach(header => {
         header.addEventListener('click', function() {
@@ -422,11 +417,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     });
 
-    // Ładowanie początkowej listy ogłoszeń
+    // Завантажуємо початковий список оголошень
     updateListings();
-
-    // Dodawanie obsługi sortowania
-    sortSelect.addEventListener('change', function() {
-        updateListings();
-    });
 });

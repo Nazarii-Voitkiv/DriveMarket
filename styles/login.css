@@ -1,234 +1,48 @@
 /* Стилі для сторінки логіну */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .login {
-    max-width: 450px;
-    margin: 8rem auto 4rem;
-    padding: 3rem;
-    background: var(--white);
-    border-radius: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    animation: fadeInUp 0.6s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.login::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
-
-.login h1 {
-    color: var(--text-dark);
-    font-size: 2.25rem;
-    font-weight: 800;
+    padding: 50px 20px;
     text-align: center;
-    margin-bottom: 2.5rem;
-    background: linear-gradient(135deg, var(--text-dark), var(--primary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background-color: #f5f5f5;
 }
 
 .login form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.login label {
-    color: var(--text-dark);
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: -0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .login input {
-    width: 90%;
-    padding: 1rem 1.25rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 1rem;
-    font-size: 1rem;
-    color: var(--text-dark);
-    transition: all 0.3s ease;
-    background: #f8fafc;
-}
-
-.login input:hover {
-    border-color: #cbd5e1;
-}
-
-.login input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background: var(--white);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-}
-
-.login button[type="submit"] {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--white);
-    padding: 1.125rem;
-    border: none;
-    border-radius: 1rem;
-    font-weight: 600;
-    font-size: 1.125rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.login button[type="submit"]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.login button[type="submit"]:hover::before {
-    left: 100%;
+.auth-btn {
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 5px;
 }
 
-.login button[type="submit"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+.auth-btn:hover {
+    background-color: #388E3C;
 }
 
-.login h2 {
-    color: var(--text-light);
-    font-size: 1rem;
-    font-weight: 500;
-    text-align: center;
-    margin: 2rem 0 1.5rem;
-    position: relative;
-}
-
-.login h2::before,
-.login h2::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 30%;
-    height: 1px;
-    background: #e2e8f0;
-}
-
-.login h2::before {
-    left: 0;
-}
-
-.login h2::after {
-    right: 0;
-}
-
-.social-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
-}
-
-.google-login-btn,
 .facebook-login-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 90%;
-    padding: 0.875rem 1.25rem;
-    border-radius: 1rem;
-    font-weight: 600;
-    font-size: 1rem;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4267B2;
+    color: white;
     text-decoration: none;
-    transition: all 0.3s ease;
-    margin-bottom: 1rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.google-login-btn {
-    color: #3c4043;
-    background: var(--white);
-    border: 2px solid #e2e8f0;
-}
-
-.google-login-btn:hover {
-    background: #f8fafc;
-    border-color: #dadce0;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.google-login-btn .social-icon {
-    color: #4285f4;
-}
-
-.facebook-login-btn {
-    color: var(--white);
-    background: #1877f2;
-    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 
 .facebook-login-btn:hover {
-    background: #166fe5;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.2);
-}
-
-.facebook-login-btn .social-icon {
-    color: var(--white);
-}
-
-.error-message {
-    background: linear-gradient(135deg, #fee2e2, #fecaca);
-    color: #dc2626;
-    padding: 1rem 1.25rem;
-    border-radius: 1rem;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 2px solid #fecaca;
-    animation: fadeInUp 0.4s ease-out;
-}
-
-@media (max-width: 640px) {
-    .login {
-        margin: 4rem 1rem 3rem;
-        padding: 2rem;
-    }
-    
-    .login h1 {
-        font-size: 2rem;
-    }
-    
-    .login input,
-    .login button[type="submit"],
-    .google-login-btn,
-    .facebook-login-btn {
-        padding: 0.875rem;
-    }
+    background-color: #365899;
 }

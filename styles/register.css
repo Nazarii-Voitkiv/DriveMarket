@@ -1,160 +1,66 @@
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .register {
-    max-width: 450px;
-    margin: 8rem auto 4rem;
-    padding: 3rem;
-    background: var(--white);
-    border-radius: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    animation: fadeInUp 0.6s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.register::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .register h1 {
-    color: var(--text-dark);
-    font-size: 2.25rem;
-    font-weight: 800;
     text-align: center;
-    margin-bottom: 2.5rem;
-    background: linear-gradient(135deg, var(--text-dark), var(--primary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #333;
+    margin-bottom: 2rem;
 }
 
 .register form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .register label {
-    color: var(--text-dark);
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: -0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-weight: bold;
+    color: #555;
 }
 
 .register input {
-    width: 90%;
-    padding: 1rem 1.25rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 1rem;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     font-size: 1rem;
-    color: var(--text-dark);
-    transition: all 0.3s ease;
-    background: #f8fafc;
 }
 
-.register input:hover {
-    border-color: #cbd5e1;
-}
-
-.register input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background: var(--white);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-}
-
-.register button[type="submit"] {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--white);
-    padding: 1.125rem;
+.register button {
+    padding: 1rem;
+    background: #4CAF50;
+    color: white;
     border: none;
-    border-radius: 1rem;
-    font-weight: 600;
-    font-size: 1.125rem;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: bold;
     margin-top: 1rem;
-    position: relative;
-    overflow: hidden;
 }
 
-.register button[type="submit"]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-}
-
-.register button[type="submit"]:hover::before {
-    left: 100%;
-}
-
-.register button[type="submit"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+.register button:hover {
+    background: #45a049;
 }
 
 .error-message {
-    background: linear-gradient(135deg, #fee2e2, #fecaca);
-    color: #dc2626;
-    padding: 1rem 1.25rem;
-    border-radius: 1rem;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #f44336;
+    background: #ffebee;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
     text-align: center;
-    border: 2px solid #fecaca;
-    animation: fadeInUp 0.4s ease-out;
 }
 
 .register a {
-    color: var(--primary-color);
+    color: #4CAF50;
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
 }
 
 .register a:hover {
-    color: var(--primary-dark);
     text-decoration: underline;
-}
-
-@media (max-width: 640px) {
-    .register {
-        margin: 4rem 1rem 3rem;
-        padding: 2rem;
-    }
-    
-    .register h1 {
-        font-size: 2rem;
-    }
-    
-    .register input,
-    .register button[type="submit"] {
-        padding: 0.875rem;
-    }
 }

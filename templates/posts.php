@@ -3,6 +3,10 @@ session_start();
 require '../vendor/autoload.php';
 $config = include('../config.php');
 
+// Можливо, ви не хочете вимагати авторизацію для перегляду публічних оголошень,
+// тож можете не перевіряти $_COOKIE['token'] тут.
+// Якщо ж оголошення закриті та потрібна авторизація, тоді додайте перевірку cookie.
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -12,16 +16,14 @@ $config = include('../config.php');
     <title>DriveMarket - Ogłoszenia</title>
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/posts.css">
-    <link rel="stylesheet" href="../styles/footer.css">
-    <link rel="stylesheet" href="../styles/avatar.css">
 </head>
 <body>
 <header class="header">
-    <a href="../index.html"><div class="logo">DriveMarket</div></a>
-    <nav class="menu" style="padding-left: 40px;">
-        <a href="posts.php" class="active">Produkty</a>
-        <a href="about.php">O nas</a>
-        <a href="contact.php">Kontakt</a>
+    <div class="logo">DriveMarket</div>
+    <nav class="menu">
+        <a href="../index.html">Strona główna</a>
+        <a href="posts.php">Ogłoszenia</a>
+        <a href="#">Kontakt</a>
     </nav>
     <div class="auth-container">
         <!-- Якщо користувач не авторизований -->
@@ -32,8 +34,7 @@ $config = include('../config.php');
         <!-- Якщо користувач авторизований (перемикатися JS-ом) -->
         <div class="user-menu" style="display: none;">
             <div class="avatar-circle" onclick="toggleDropdown()">
-                <div class="user-initial"></div>
-                <img class="avatar-image" alt="User avatar">
+                <span id="userInitials">A</span>
             </div>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="profile.php">Profil</a>
@@ -49,15 +50,6 @@ $config = include('../config.php');
     <h1>Wszystkie ogłoszenia</h1>
     <div class="filters-container">
         <div class="filters-row">
-            <div class="filter-group">
-                <select class="filter-select" id="sortowanie">
-                    <option value="">Sortuj</option>
-                    <option value="cena_asc">Cena: od najniższej</option>
-                    <option value="cena_desc">Cena: od najwyższej</option>
-                    <option value="przebieg_asc">Najniższy przebieg</option>
-                    <option value="przebieg_desc">Najwyższy przebieg</option>
-                </select>
-            </div>
             <div class="filter-group">
                 <select class="filter-select" id="marka">
                     <option value="">Marka pojazdu</option>
@@ -80,7 +72,7 @@ $config = include('../config.php');
                             }
                         }
                     } catch (PDOException $e) {
-                        
+                        // Просто пропускаємо помилку, щоб не зламати інтерфейс
                     }
                     ?>
                 </select>
@@ -360,20 +352,27 @@ $config = include('../config.php');
 
                     // 1) Зображення
                     if (!empty($listing['images'])) {
+                        // Припустимо, що images зберігається у форматі JSON
                         $images = json_decode($listing['images'], true);
-                        error_log("Raw images from DB: " . $listing['images']);
-                        error_log("Decoded images: " . print_r($images, true));
                         if (is_array($images) && count($images) > 0) {
-                            $firstImage = str_replace('\\/', '/', $images[0]); // Fix escaped slashes
-                            error_log("Image path: " . $firstImage);
-                            echo '<div class="post-box">';
-                            echo '<img src="../' . htmlspecialchars($firstImage) . '" alt="Zdjęcie pojazdu" />';
-                            echo '</div>';
+                            // Якщо масив з Base64
+                            // Якщо ж зберігаються просто назви файлів, тоді:
+                            // echo '<img src="../upload/' . htmlspecialchars($images[0]) . '" ... >';
+
+                            // Для Base64 вигляду:
+                            $firstImage = $images[0];
+                            if (!empty($firstImage['data']) && !empty($firstImage['type'])) {
+                                echo '<div class="post-box">';
+                                echo '<img src="data:' . htmlspecialchars($firstImage['type']) . ';base64,' . htmlspecialchars($firstImage['data']) . '" alt="Zdjęcie pojazdu" />';
+                                echo '</div>';
+                            } else {
+                                echo '<div class="post-box"><div class="no-image">Brak zdjęcia</div></div>';
+                            }
                         } else {
-                            echo '<div class="post-box"></div>';
+                            echo '<div class="post-box"><div class="no-image">Brak zdjęcia</div></div>';
                         }
                     } else {
-                        echo '<div class="post-box"></div>';
+                        echo '<div class="post-box"><div class="no-image">Brak zdjęcia</div></div>';
                     }
 
                     // 2) Інфо: марка, модель, ціна, телефон...
@@ -415,54 +414,10 @@ $config = include('../config.php');
         ?>
     </div>
 </section>
+
 <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>DriveMarket</h3>
-                <p>Twój najlepszy sklep online z częściami samochodowymi. Znajdź wszystko, czego potrzebujesz do swojego pojazdu.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Szybkie linki</h4>
-                <nav class="footer-links">
-                    <a href="#">Strona główna</a>
-                    <a href="templates/posts.php">Produkty</a>
-                    <a href="#">O nas</a>
-                    <a href="#">Kontakt</a>
-                </nav>
-            </div>
-            <div class="footer-section">
-                <h4>Wsparcie</h4>
-                <nav class="footer-links">
-                    <a href="#">FAQ</a>
-                    <a href="#">Polityka prywatności</a>
-                    <a href="#">Regulamin</a>
-                    <a href="#">Dostawa</a>
-                </nav>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
-        </div>
-    </footer>
+    <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
+</footer>
 
 <script src="../scripts/auth.js"></script>
 <script>

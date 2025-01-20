@@ -47,31 +47,14 @@ if (isset($_GET['edit'])) {
     <title>DriveMarket - Stwórz ogłoszenie</title>
     <link rel="stylesheet" href="../styles/common.css">
     <link rel="stylesheet" href="../styles/create-listing.css">
-    <link rel="stylesheet" href="../styles/footer.css">
-    <link rel="stylesheet" href="../styles/avatar.css">
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     
-    <style>
-        .details-content,
-        .equipment-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .details-content.expanded,
-        .equipment-content.expanded {
-            max-height: 1000px; /* Або інше велике значення */
-        }
-
-    </style>
-
 </head>
 <body>
     <header class="header">
-        <a href="../index.html"><div class="logo">DriveMarket</div></a>
-        <nav class="menu" style="padding-left: 40px;">
+        <div class="logo">DriveMarket</div>
+        <nav class="menu">
             <a href="../index.html">Strona główna</a>
             <a href="posts.php">Ogłoszenia</a>
             <a href="#">Kontakt</a>
@@ -83,8 +66,7 @@ if (isset($_GET['edit'])) {
             </div>
             <div class="user-menu" style="display: none;">
                 <div class="avatar-circle" onclick="toggleDropdown()">
-                    <div class="user-initial"></div>
-                    <img class="avatar-image" alt="User avatar">
+                    <span id="userInitials">A</span>
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="profile.php">Profil</a>
@@ -230,6 +212,7 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
                 <div class="form-group">
+                    <!-- Замість name="engine_size" робимо name="engine_capacity" -->
                     <label for="engine_capacity" class="normal-label">Pojemność skokowa*</label>
                     <div class="input-with-suffix">
                         <input type="number" id="engine_capacity" name="engine_capacity" placeholder="np. 1255" required>
@@ -320,7 +303,7 @@ if (isset($_GET['edit'])) {
                     <span class="upload-text">lub upuść pliki tutaj</span>
                 </div>
                 <p class="upload-info"><strong>Zalecamy co najmniej 15 zdjęć</strong>, ale możesz dodać maksymalnie 40 zdjęć. Akceptowane są formaty plików JPG i PNG.</p>
-                <input type="file" id="photoInput" name="photos[]" multiple accept="image/jpeg,image/png" style="display: none;">
+                <input type="file" id="photoInput" name="images[]" multiple accept="image/jpeg,image/png" style="display: none;">
                 <div id="previewContainer" class="preview-container"></div>
             </div>
 
@@ -328,16 +311,19 @@ if (isset($_GET['edit'])) {
 
             <div class="description-container">
                 <div class="form-group">
-                    <label for="title" class="normal-label">Tytuł ogłoszenia*</label>
+                    <label for="title" class="normal-label">Tytuł ogłoszenia</label>
                     <input type="text" id="title" name="title" placeholder="np. pierwszy właściciel, stan idealny, nowy akumulator" value="<?php echo htmlspecialchars($listingData['title'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label class="normal-label">Opis*</label>
-                    <div id="editor-container">
-                        <div id="editor"><?php echo $listingData['description'] ?? ''; ?></div>
+                    <label for="description" class="normal-label">Opis <span class="char-counter">0/6000</span></label>
+                    <div id="quill-toolbar">
+                        <button type="button" class="ql-bold"></button>
+                        <button type="button" class="ql-italic"></button>
+                        <button type="button" class="ql-list" value="bullet"></button>
                     </div>
-                    <input type="hidden" name="description" id="description">
+                    <div id="description-editor" style="height: 200px;"></div>
+                    <input type="hidden" name="description" id="description-input" value="<?php echo htmlspecialchars($listingData['description'] ?? ''); ?>">
                 </div>
             </div>
 
@@ -1269,7 +1255,7 @@ if (isset($_GET['edit'])) {
                             </select>
                         </div>
 
-                        <h3 style="color: #666666;">Stan pojazdu</h3>
+                        <h3 style="color: #666666; margin-bottom: 10px;">Stan pojazdu</h3>
                         <div class="details-item">
                             <label>Pierwszy właściciel (od nowości)</label>
                             <div class="radio-group">
@@ -1445,52 +1431,7 @@ if (isset($_GET['edit'])) {
     </div>
 
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>DriveMarket</h3>
-                <p>Twój najlepszy sklep online z częściami samochodowymi. Znajdź wszystko, czego potrzebujesz do swojego pojazdu.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Szybkie linki</h4>
-                <nav class="footer-links">
-                    <a href="#">Strona główna</a>
-                    <a href="templates/posts.php">Produkty</a>
-                    <a href="#">O nas</a>
-                    <a href="#">Kontakt</a>
-                </nav>
-            </div>
-            <div class="footer-section">
-                <h4>Wsparcie</h4>
-                <nav class="footer-links">
-                    <a href="#">FAQ</a>
-                    <a href="#">Polityka prywatności</a>
-                    <a href="#">Regulamin</a>
-                    <a href="#">Dostawa</a>
-                </nav>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
-        </div>
+        <p>&copy; 2024 DriveMarket. Wszystkie prawa zastrzeżone.</p>
     </footer>
 
     <script src="../scripts/auth.js"></script>
@@ -1608,32 +1549,61 @@ if (isset($_GET['edit'])) {
             }
 
             // Функція для створення попереднього перегляду
-            function createPreview(file) {
+            function createPreview(file, existingImageData = null) {
                 const preview = document.createElement('div');
                 preview.className = 'preview-item';
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
+                if (existingImageData) {
+                    // Для існуючих зображень з бази даних
                     preview.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
+                        <img src="data:${existingImageData.type};base64,${existingImageData.data}" alt="Preview">
                         <button type="button" class="remove-photo">×</button>
+                        <input type="hidden" name="existing_images" value='${JSON.stringify(existingImageData)}'>
                     `;
                     // Додаємо в кінець
                     previewContainer.appendChild(preview);
-                    updatePhotoCounter();
-                };
-                reader.readAsDataURL(file);
+                } else {
+                    // Для нових зображень
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = {
+                            id: 'new_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            type: file.type,
+                            data: e.target.result.split(',')[1] // Отримуємо тільки base64 частину
+                        };
+                        
+                        preview.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <button type="button" class="remove-photo">×</button>
+                            <input type="hidden" name="existing_images" value='${JSON.stringify(imageData)}'>
+                        `;
+                        // Додаємо в кінець
+                        previewContainer.appendChild(preview);
+                        updatePhotoCounter();
+                    };
+                    reader.readAsDataURL(file);
+                }
 
                 // Додаємо обробник для кнопки видалення
                 preview.querySelector('.remove-photo').addEventListener('click', function() {
                     preview.remove();
-                    const index = uploadedFiles.indexOf(file);
-                    if (index > -1) {
-                        uploadedFiles.splice(index, 1);
-                    }
                     updatePhotoCounter();
                 });
             }
+
+            // Завантаження існуючих зображень при редагуванні
+            <?php if ($isEditing && isset($listingData['images'])): ?>
+            try {
+                const existingImages = <?php echo $listingData['images']; ?>;
+                if (Array.isArray(existingImages)) {
+                    existingImages.forEach(image => {
+                        createPreview(null, image);
+                    });
+                }
+            } catch (e) {
+                console.error('Error loading existing images:', e);
+            }
+            <?php endif; ?>
 
             // Обробка вибору файлів
             photoInput.addEventListener('change', function(e) {
@@ -1677,22 +1647,333 @@ if (isset($_GET['edit'])) {
                 });
             });
 
+            // Додаємо обробник для форми
+            document.querySelector('form').addEventListener('submit', function(e) {
+                // Збираємо всі зображення (як існуючі, так і нові)
+                const allImages = [];
+                document.querySelectorAll('input[name="existing_images"]').forEach(input => {
+                    try {
+                        const imageData = JSON.parse(input.value);
+                        allImages.push(imageData);
+                    } catch (e) {
+                        console.error('Error parsing image data:', e);
+                    }
+                });
+
+                // Видаляємо всі старі приховані поля
+                this.querySelectorAll('input[name="existing_images"]').forEach(input => {
+                    if (!input.closest('.preview-item')) {
+                        input.remove();
+                    }
+                });
+
+                // Додаємо одне приховане поле з усіма зображеннями
+                const existingImagesInput = document.createElement('input');
+                existingImagesInput.type = 'hidden';
+                existingImagesInput.name = 'existing_images';
+                existingImagesInput.value = JSON.stringify(allImages);
+                this.appendChild(existingImagesInput);
+            });
+
             // Обробник кліку на кнопку додавання зображень
             uploadButton.addEventListener('click', () => {
                 photoInput.click();
             });
+        });
 
-            // Обробники для drag & drop
-            uploadZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadZone.classList.add('dragover');
-            });
+        // Функція для підрахунку символів у описі
+        const description = document.getElementById('description-editor');
+        const descriptionInput = document.getElementById('description-input');
+        const charCounter = document.querySelector('.char-counter');
+        const maxLength = 6000;
 
-            uploadZone.addEventListener('dragleave', () => {
-                uploadZone.classList.remove('dragover');
+        description.addEventListener('input', function() {
+            const length = this.textContent.length;
+            charCounter.textContent = length + '/6000';
+            
+            if (length > maxLength) {
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+            }
+
+            // Оновлюємо приховане поле для форми
+            descriptionInput.value = this.innerHTML;
+        });
+
+        // Функціонал кнопок форматування
+        document.addEventListener('DOMContentLoaded', function() {
+    const toolbarButtons = document.querySelectorAll('.toolbar-btn');
+    const description = document.getElementById('description-editor');
+    const descriptionInput = document.getElementById('description-input');
+
+    // Функція оновлення лічильника та прихованого поля
+    function updateEditorState() {
+        // Оновлюємо лічильники, якщо потрібно
+        updateRequiredFieldsCounter();
+
+        // Синхронізуємо вміст редактора з прихованим полем форми
+        descriptionInput.value = description.innerHTML;
+    }
+
+    toolbarButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            let command;
+
+            // Визначаємо команду на основі тексту кнопки
+            const btnText = this.textContent.trim();
+            if (btnText === 'B') {
+                command = 'bold';
+            } else if (btnText === 'i') {
+                command = 'italic';
+            } else if (btnText === '•') {
+                command = 'insertUnorderedList';
+            }
+
+            // Якщо команда визначена – виконуємо її
+            if (command) {
+                document.execCommand(command, false, null);
+                // Перемикаємо стан кнопки (активна/неактивна)
+                this.classList.toggle('active');
+            }
+
+            // Фокусуємо редактор після кліку
+            description.focus();
+
+            // Оновлюємо стан редактора
+            updateEditorState();
+        });
+    });
+
+    // Оновлюємо приховане поле і лічильники при будь-яких змінах у редакторі
+    description.addEventListener('input', function() {
+        updateEditorState();
+    });
+});
+
+        // Функціонал розгортання/згортання розділів
+        const detailsSections = document.querySelectorAll('.details-section');
+        
+        detailsSections.forEach(section => {
+            const header = section.querySelector('.details-header');
+            const content = section.querySelector('.details-content');
+            const expandBtn = section.querySelector('.expand-btn');
+            
+            header.addEventListener('click', () => {
+                content.classList.toggle('active');
+                expandBtn.classList.toggle('active');
             });
         });
 
+        // Функціонал перемикання типу ціни
+        const priceTypeButtons = document.querySelectorAll('.price-type-btn');
+        
+        priceTypeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                priceTypeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+
+        // Додаємо обробник для секцій обладнання
+        const equipmentHeaders = document.querySelectorAll('.equipment-header');
+        equipmentHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const expandBtn = header.querySelector('.expand-btn');
+                content.classList.toggle('active');
+                expandBtn.classList.toggle('active');
+            });
+        });
+
+        // Оновлений код для підрахунку вибраних опцій
+        const equipmentSections = document.querySelectorAll('.equipment-item');
+        
+        equipmentSections.forEach(section => {
+            const counter = section.querySelector('.equipment-counter');
+            const selects = section.querySelectorAll('select');
+            const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+            
+            function updateCounter() {
+                let selectedCount = 0;
+                let totalItems = 0;
+
+                // Якщо це секція Osiągi i tuning
+                if (section.querySelector('.equipment-header span').textContent === 'Osiągi i tuning') {
+                    totalItems = 11;
+                } else if (section.querySelector('.equipment-header span').textContent === 'Bezpieczeństwo') {
+                    totalItems = 34;
+                } else if (section.querySelector('.equipment-header span').textContent === 'Systemy wspomagania kierowcy') {
+                    totalItems = 46;
+                } else if (section.querySelector('.komfort-grid')) {
+                    totalItems = 44;
+                } else {
+                    totalItems = checkboxes.length;
+                }
+                
+                // Підрахунок вибраних опцій в select елементах
+                selects.forEach(select => {
+                    if (select.value && select.value !== '' && select.value !== 'none') {
+                        selectedCount++;
+                    }
+                });
+                
+                // Підрахунок відмічених чекбоксів
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedCount++;
+                    }
+                });
+                
+                counter.textContent = `${selectedCount}/${totalItems}`;
+            }
+            
+            // Додаємо слухачі подій для всіх select
+            selects.forEach(select => {
+                select.addEventListener('change', updateCounter);
+            });
+            
+            // Додаємо слухачі подій для всіх чекбоксів
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateCounter);
+            });
+            
+            // Початкове оновлення лічильника
+            updateCounter();
+        });
+
+        // Додаємо обробник для відображення ціни з ПДВ
+        const priceInput = document.querySelector('input[name="price"]');
+        const vatInfo = document.querySelector('.vat-info');
+        const priceWithVatSpan = document.querySelector('.price-with-vat');
+        const buttons = document.querySelectorAll('.price-type-btn');
+
+        function updateVatPrice() {
+            const nettoBtn = Array.from(buttons).find(btn => btn.textContent === 'Netto');
+            if (priceInput.value && nettoBtn.classList.contains('active')) {
+                const price = parseFloat(priceInput.value);
+                const priceWithVat = Math.round(price * 1.23);
+                priceWithVatSpan.textContent = priceWithVat;
+                vatInfo.style.display = 'block';
+            } else {
+                vatInfo.style.display = 'none';
+            }
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', updateVatPrice);
+        });
+
+        priceInput.addEventListener('input', updateVatPrice);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const description = document.getElementById('description-editor');
+            const descriptionInput = document.getElementById('description-input');
+            
+            // Функція для очищення тексту від HTML-сутностей та зайвих пробілів
+            function cleanText(text) {
+                return text.replace(/&nbsp;/g, ' ')  // Заміняємо &nbsp; на звичайний пробіл
+                          .replace(/\s+/g, ' ')      // Заміняємо множинні пробіли на один
+                          .trim();                   // Видаляємо пробіли на початку і в кінці
+            }
+            
+            // Оновлюємо приховане поле при завантаженні сторінки
+            if (description.textContent) {
+                const cleanContent = cleanText(description.textContent);
+                descriptionInput.value = cleanContent;
+                description.textContent = cleanContent;
+                updateCharCounter(cleanContent);
+            }
+            
+            // Оновлюємо приховане поле при зміні тексту
+            description.addEventListener('input', function() {
+                const cleanContent = cleanText(this.textContent);
+                descriptionInput.value = cleanContent;
+                updateCharCounter(cleanContent);
+            });
+            
+            // Очищаємо текст при втраті фокусу
+            description.addEventListener('blur', function() {
+                const cleanContent = cleanText(this.textContent);
+                this.textContent = cleanContent;
+                descriptionInput.value = cleanContent;
+                updateCharCounter(cleanContent);
+            });
+            
+            function updateCharCounter(text) {
+                const counter = document.querySelector('.char-counter');
+                const length = text.length;
+                counter.textContent = length + '/6000';
+                
+                if (length > 6000) {
+                    counter.style.color = 'red';
+                } else {
+                    counter.style.color = '';
+                }
+            }
+        });
+    </script>
+    <script>
+        <?php if ($isEditing && $listingData): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formData = <?php echo json_encode($listingData); ?>;
+            
+            // Заповнення простих полів
+            for (const [key, value] of Object.entries(formData)) {
+                const elements = document.querySelectorAll(`[name="${key}"]`);
+                if (!elements.length) continue;
+
+                elements.forEach(element => {
+                    if (element.type === 'radio') {
+                        // Для радіо-кнопок порівнюємо значення
+                        if ((value === 1 && element.value === 'tak') || 
+                            (value === 0 && element.value === 'nie')) {
+                            element.checked = true;
+                        }
+                    } else if (element.type === 'checkbox') {
+                        element.checked = value === '1' || value === true;
+                    } else if (element.tagName === 'SELECT') {
+                        if (value !== null && value !== '') {
+                            element.value = value;
+                        }
+                    } else if (element.type === 'number') {
+                        element.value = value || '';
+                    } else {
+                        element.value = value || '';
+                    }
+                });
+            }
+
+            // Заповнення дати першої реєстрації
+            if (formData.first_registration) {
+                const [year, month, day] = formData.first_registration.split('-');
+                document.getElementById('first_reg_date_year').value = year;
+                document.getElementById('first_reg_date_month').value = month.padStart(2, '0');
+                document.getElementById('first_reg_date_day').value = day.padStart(2, '0');
+            }
+
+            // Заповнення прапорця приховування реєстраційної інформації
+            const hideRegInfoCheckbox = document.querySelector('input[name="hide_reg_info"]');
+            if (hideRegInfoCheckbox) {
+                hideRegInfoCheckbox.checked = formData.hide_reg_info === '1' || formData.hide_reg_info === 1 || formData.hide_reg_info === true;
+            }
+
+            // Заповнення VIN
+            document.getElementById('vin').value = formData.vin;
+
+            // Заповнення пробігу
+            document.getElementById('mileage').value = formData.mileage;
+
+            // Заповнення реєстраційного номера
+            document.getElementById('reg_number').value = formData.reg_number;
+
+            // Оновлюємо лічильники
+            updateRequiredFieldsCounter();
+        });
+        <?php endif; ?>
+    </script>
+    <script>
         // Функція для встановлення чекбоксів обладнання
         function setEquipmentCheckboxes(data) {
             if (!data) return;
@@ -1735,92 +2016,148 @@ if (isset($_GET['edit'])) {
             if (formData.systemy_wspomagania) setEquipmentCheckboxes(formData.systemy_wspomagania);
             if (formData.osiagi_tuning) setEquipmentCheckboxes(formData.osiagi_tuning);
             if (formData.bezpieczenstwo) setEquipmentCheckboxes(formData.bezpieczenstwo);
-
-            // Set price type button active state
-            if (formData.price_type) {
-                const priceTypeLabel = document.querySelector(`label[for="price_type_${formData.price_type}"]`);
-                if (priceTypeLabel) {
-                    priceTypeLabel.classList.add('active');
-                }
-            }
         });
         <?php endif; ?>
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Price type button handling
-            const priceTypeLabels = document.querySelectorAll('label.price-type-btn');
-            const priceTypeRadios = document.querySelectorAll('input[name="price_type"]');
+        // Функція для оновлення всіх лічильників обладнання
+        function updateAllEquipmentCounters() {
+            document.querySelectorAll('.equipment-item').forEach(section => {
+                const counter = section.querySelector('.equipment-counter');
+                if (counter) {
+                    let checkedCount = 0;
+                    
+                    // Рахуємо відмічені чекбокси
+                    checkedCount += section.querySelectorAll('input[type="checkbox"]:checked').length;
+                    
+                    // Рахуємо вибрані значення в select (крім пустих і 'none')
+                    section.querySelectorAll('select').forEach(select => {
+                        if (select.value && select.value !== 'none' && select.value !== '') {
+                            checkedCount++;
+                        }
+                    });
+                    
+                    const total = counter.textContent.split('/')[1];
+                    counter.textContent = `${checkedCount}/${total}`;
+                }
+            });
+        }
+
+        // Функція для встановлення чекбоксів обладнання
+        function setEquipmentCheckboxes(data) {
+            if (!data) return;
             
-            priceTypeLabels.forEach((label) => {
-                label.addEventListener('click', function() {
-                    // Remove active class from all labels
-                    priceTypeLabels.forEach(lbl => lbl.classList.remove('active'));
-                    // Add active class to clicked label
-                    this.classList.add('active');
-                    // Find and check the corresponding radio button
-                    const radioId = this.getAttribute('for');
-                    document.getElementById(radioId).checked = true;
+            try {
+                const equipment = typeof data === 'string' ? JSON.parse(data) : data;
+                equipment.forEach(value => {
+                    const checkbox = document.querySelector(`input[name="equipment[]"][value="${value}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            } catch (e) {
+                console.error('Error setting equipment:', e);
+            }
+        }
+
+        // Встановлюємо значення при завантаженні сторінки
+        <?php if ($isEditing && $listingData): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formData = <?php echo json_encode($listingData); ?>;
+            
+            // Встановлюємо чекбокси для кожної категорії
+            if (formData.audio_multimedia) setEquipmentCheckboxes(formData.audio_multimedia);
+            if (formData.komfort) setEquipmentCheckboxes(formData.komfort);
+            if (formData.samochody_elektryczne) setEquipmentCheckboxes(formData.samochody_elektryczne);
+            if (formData.systemy_wspomagania) setEquipmentCheckboxes(formData.systemy_wspomagania);
+            if (formData.osiagi_tuning) setEquipmentCheckboxes(formData.osiagi_tuning);
+            if (formData.bezpieczenstwo) setEquipmentCheckboxes(formData.bezpieczenstwo);
+            
+            // Встановлюємо значення для select-полів
+            if (formData.klimatyzacja) document.querySelector('select[name="klimatyzacja"]').value = formData.klimatyzacja;
+            if (formData.rozkladany_dach) document.querySelector('select[name="rozkladany_dach"]').value = formData.rozkladany_dach;
+            if (formData.otwierany_dach) document.querySelector('select[name="otwierany_dach"]').value = formData.otwierany_dach;
+            if (formData.oslona) document.querySelector('select[name="oslona"]').value = formData.oslona;
+            if (formData.tapicerka) document.querySelector('select[name="tapicerka"]').value = formData.tapicerka;
+            if (formData.tempomat) document.querySelector('select[name="tempomat"]').value = formData.tempomat;
+            if (formData.reflektory) document.querySelector('select[name="reflektory"]').value = formData.reflektory;
+            if (formData.felgi) document.querySelector('select[name="felgi"]').value = formData.felgi;
+            if (formData.opony) document.querySelector('select[name="opony"]').value = formData.opony;
+            
+            // Оновлюємо всі лічильники після встановлення значень
+            updateAllEquipmentCounters();
+        });
+        <?php endif; ?>
+
+        // Додаємо слухачі подій для всіх select-полів
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.equipment-item select').forEach(select => {
+                select.addEventListener('change', updateAllEquipmentCounters);
+            });
+            
+            document.querySelectorAll('.equipment-item input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateAllEquipmentCounters);
+            });
+        });
+    </script>
+    <script>
+        // Обробка радіо-кнопок типу ціни
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceTypeInputs = document.querySelectorAll('input[name="price_type"]');
+            
+            priceTypeInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Знімаємо клас active з усіх лейблів
+                    document.querySelectorAll('.price-type-buttons label').forEach(label => {
+                        label.classList.remove('active');
+                    });
+                    
+                    // Додаємо клас active до відповідного лейблу
+                    const label = document.querySelector(`label[for="${this.id}"]`);
+                    if (label) {
+                        label.classList.add('active');
+                    }
                 });
             });
         });
     </script>
     <script>
-        // Initialize Quill editor
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Opisz swój samochód...',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]
+        // Функція для встановлення чекбоксів обладнання
+        function setEquipmentCheckboxes(data) {
+            if (!data) return;
+            
+            try {
+                const equipment = typeof data === 'string' ? JSON.parse(data) : data;
+                equipment.forEach(value => {
+                    const checkbox = document.querySelector(`input[name="equipment[]"][value="${value}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            } catch (e) {
+                console.error('Error setting equipment:', e);
             }
-        });
+        }
 
-        // Update hidden input before form submission
-        document.getElementById('listingForm').onsubmit = function() {
-            var description = document.getElementById('description');
-            description.value = quill.root.innerHTML;
-            return true;
-        };
-    </script>
-    <script>
+        // Функція для оновлення лічильника
+        function updateEquipmentCounter(checkbox) {
+            const section = checkbox.closest('.equipment-item');
+            if (section) {
+                const counter = section.querySelector('.equipment-counter');
+                if (counter) {
+                    const checkedCount = section.querySelectorAll('input[type="checkbox"]:checked').length;
+                    const total = counter.textContent.split('/')[1];
+                    counter.textContent = `${checkedCount}/${total}`;
+                }
+            }
+        }
+
+        // Встановлюємо значення при завантаженні сторінки
         <?php if ($isEditing && $listingData): ?>
         document.addEventListener('DOMContentLoaded', function() {
             const formData = <?php echo json_encode($listingData); ?>;
             
-            // Populate form fields
-            for (const [key, value] of Object.entries(formData)) {
-                if (!value || ['audio_multimedia', 'komfort', 'samochody_elektryczne', 
-                    'systemy_wspomagania', 'osiagi_tuning', 'bezpieczenstwo'].includes(key)) continue;
-
-                const elements = document.getElementsByName(key);
-                elements.forEach(element => {
-                    if (element.type === 'radio') {
-                        if (element.value === value.toString()) {
-                            element.checked = true;
-                            if (key === 'price_type') {
-                                const label = document.querySelector(`label[for="${element.id}"]`);
-                                if (label) label.classList.add('active');
-                            }
-                        }
-                    } else if (element.type === 'checkbox') {
-                        element.checked = value === '1' || value === true;
-                    } else if (!element.type.includes('file')) {
-                        element.value = value;
-                    }
-                });
-            }
-
-            // Handle Quill editor
-            if (formData.description) {
-                const quill = new Quill('#editor');
-                quill.root.innerHTML = formData.description;
-            }
-            
-            // Handle equipment checkboxes
+            // Встановлюємо чекбокси для кожної категорії
             if (formData.audio_multimedia) setEquipmentCheckboxes(formData.audio_multimedia);
             if (formData.komfort) setEquipmentCheckboxes(formData.komfort);
             if (formData.samochody_elektryczne) setEquipmentCheckboxes(formData.samochody_elektryczne);
@@ -1831,43 +2168,182 @@ if (isset($_GET['edit'])) {
         <?php endif; ?>
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    // Отримуємо всі кнопки для розгортання
-    const expandButtons = document.querySelectorAll('.expand-btn');
-
-    // Додаємо обробник подій для кожної кнопки
-    expandButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Знаходимо найближчий контейнер з класом details-section
-            const detailsSection = button.closest('.details-section');
-            
-            if (detailsSection) {
-                // Знаходимо елемент з класом details-content всередині секції
-                const detailsContent = detailsSection.querySelector('.details-content');
-
-                if (detailsContent) {
-                    detailsContent.classList.toggle('expanded');
-                    const isExpanded = detailsContent.classList.contains('expanded');
-                    detailsContent.style.maxHeight = isExpanded ? detailsContent.scrollHeight + 'px' : null;
+        // Функція для оновлення всіх лічильників обладнання
+        function updateAllEquipmentCounters() {
+            document.querySelectorAll('.equipment-item').forEach(section => {
+                const counter = section.querySelector('.equipment-counter');
+                if (counter) {
+                    let checkedCount = 0;
+                    
+                    // Рахуємо відмічені чекбокси
+                    checkedCount += section.querySelectorAll('input[type="checkbox"]:checked').length;
+                    
+                    // Рахуємо вибрані значення в select (крім пустих і 'none')
+                    section.querySelectorAll('select').forEach(select => {
+                        if (select.value && select.value !== 'none' && select.value !== '') {
+                            checkedCount++;
+                        }
+                    });
+                    
+                    const total = counter.textContent.split('/')[1];
+                    counter.textContent = `${checkedCount}/${total}`;
                 }
-            }
+            });
+        }
 
-            // Для equipment-section
-            const equipmentSection = button.closest('.equipment-section');
+        // Функція для встановлення чекбоксів обладнання
+        function setEquipmentCheckboxes(data) {
+            if (!data) return;
             
-            if (equipmentSection) {
-                const equipmentContent = equipmentSection.querySelector('.equipment-content');
-
-                if (equipmentContent) {
-                    equipmentContent.classList.toggle('expanded');
-                    const isExpanded = equipmentContent.classList.contains('expanded');
-                    equipmentContent.style.maxHeight = isExpanded ? equipmentContent.scrollHeight + 'px' : null;
-                }
+            try {
+                const equipment = typeof data === 'string' ? JSON.parse(data) : data;
+                equipment.forEach(value => {
+                    const checkbox = document.querySelector(`input[name="equipment[]"][value="${value}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            } catch (e) {
+                console.error('Error setting equipment:', e);
             }
+        }
+
+        // Встановлюємо значення при завантаженні сторінки
+        <?php if ($isEditing && $listingData): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formData = <?php echo json_encode($listingData); ?>;
+            
+            // Встановлюємо чекбокси для кожної категорії
+            if (formData.audio_multimedia) setEquipmentCheckboxes(formData.audio_multimedia);
+            if (formData.komfort) setEquipmentCheckboxes(formData.komfort);
+            if (formData.samochody_elektryczne) setEquipmentCheckboxes(formData.samochody_elektryczne);
+            if (formData.systemy_wspomagania) setEquipmentCheckboxes(formData.systemy_wspomagania);
+            if (formData.osiagi_tuning) setEquipmentCheckboxes(formData.osiagi_tuning);
+            if (formData.bezpieczenstwo) setEquipmentCheckboxes(formData.bezpieczenstwo);
+            
+            // Встановлюємо значення для select-полів
+            if (formData.klimatyzacja) document.querySelector('select[name="klimatyzacja"]').value = formData.klimatyzacja;
+            if (formData.rozkladany_dach) document.querySelector('select[name="rozkladany_dach"]').value = formData.rozkladany_dach;
+            if (formData.otwierany_dach) document.querySelector('select[name="otwierany_dach"]').value = formData.otwierany_dach;
+            if (formData.oslona) document.querySelector('select[name="oslona"]').value = formData.oslona;
+            if (formData.tapicerka) document.querySelector('select[name="tapicerka"]').value = formData.tapicerka;
+            if (formData.tempomat) document.querySelector('select[name="tempomat"]').value = formData.tempomat;
+            if (formData.reflektory) document.querySelector('select[name="reflektory"]').value = formData.reflektory;
+            if (formData.felgi) document.querySelector('select[name="felgi"]').value = formData.felgi;
+            if (formData.opony) document.querySelector('select[name="opony"]').value = formData.opony;
+            
+            // Оновлюємо всі лічильники після встановлення значень
+            updateAllEquipmentCounters();
         });
-    });
-});
+        <?php endif; ?>
 
+        // Додаємо слухачі подій для всіх select-полів
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.equipment-item select').forEach(select => {
+                select.addEventListener('change', updateAllEquipmentCounters);
+            });
+            
+            document.querySelectorAll('.equipment-item input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateAllEquipmentCounters);
+            });
+        });
     </script>
-</body>
-</html>
+    <script>
+        // Обробка радіо-кнопок типу ціни
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceTypeInputs = document.querySelectorAll('input[name="price_type"]');
+            
+            priceTypeInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Знімаємо клас active з усіх лейблів
+                    document.querySelectorAll('.price-type-buttons label').forEach(label => {
+                        label.classList.remove('active');
+                    });
+                    
+                    // Додаємо клас active до відповідного лейблу
+                    const label = document.querySelector(`label[for="${this.id}"]`);
+                    if (label) {
+                        label.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceTypeInputs = document.querySelectorAll('input[name="price_type"]');
+            const priceTypeLabels = document.querySelectorAll('.price-type-buttons label');
+            
+            // Переконуємося, що хоча б одна кнопка вибрана при завантаженні
+            if (!Array.from(priceTypeInputs).some(input => input.checked)) {
+                priceTypeInputs[0].checked = true;
+                priceTypeLabels[0].classList.add('active');
+            }
+            
+            priceTypeInputs.forEach(input => {
+                input.addEventListener('click', function(e) {
+                    // Якщо кнопка вже вибрана, запобігаємо зняттю вибору
+                    if (this.checked) {
+                        e.stopPropagation();
+                        
+                        // Оновлюємо стилі для всіх лейблів
+                        priceTypeLabels.forEach(label => {
+                            label.classList.remove('active');
+                        });
+                        
+                        // Додаємо active до поточного лейблу
+                        const currentLabel = document.querySelector(`label[for="${this.id}"]`);
+                        if (currentLabel) {
+                            currentLabel.classList.add('active');
+                        }
+                    } else {
+                        // Якщо намагаються зняти вибір, відміняємо цю дію
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ініціалізація Quill.js
+            const quill = new Quill('#description-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: '#quill-toolbar'
+                },
+                placeholder: 'Wpisz opis ogłoszenia...'
+            });
+
+            // Попереднє заповнення редактора (якщо є дані)
+            const descriptionInput = document.getElementById('description-input');
+            if (descriptionInput.value) {
+                quill.root.innerHTML = descriptionInput.value;
+            }
+
+            // Оновлення прихованого поля форми та лічильника символів при зміні контенту
+            quill.on('text-change', function() {
+                const text = quill.getText();
+                const charCount = text.length - 1; // Віднімаємо 1, бо Quill додає додатковий символ в кінці
+                const charCounter = document.querySelector('.char-counter');
+                charCounter.textContent = `${charCount}/6000`;
+                
+                // Обмеження на 6000 символів
+                if (charCount > 6000) {
+                    const delta = quill.getContents();
+                    quill.setContents(delta.slice(0, 6000));
+                }
+
+                // Оновлюємо приховане поле
+                descriptionInput.value = quill.root.innerHTML;
+                
+                // Оновлюємо лічильник обов'язкових полів
+                updateRequiredFieldsCounter();
+            });
+
+            // Оновлюємо лічильник символів при завантаженні
+            const initialText = quill.getText();
+            const initialCharCount = initialText.length - 1;
+            document.querySelector('.char-counter').textContent = `${initialCharCount}/6000`;
+        });
+    </script>
