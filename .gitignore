@@ -6,3 +6,5 @@ composer.lock
 package-lock.json
 /.idea
 .DS_Store
+.DS_Store
+templates/create-listing.php

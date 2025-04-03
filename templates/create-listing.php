@@ -53,18 +53,52 @@ if (isset($_GET['edit'])) {
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     
     <style>
-        .details-content,
-        .equipment-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
+        .details-section {
+            overflow: visible !important;
+        }
+        
+        .details-content {
+            display: none;
+            padding: 24px;
+        }
+        
+        .details-section.expanded .details-content {
+            display: block;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .expand-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 50%;
         }
 
-        .details-content.expanded,
-        .equipment-content.expanded {
-            max-height: 1000px; /* Або інше велике значення */
+        .expand-btn svg {
+            transition: transform 0.3s ease;
         }
 
+        .details-section.expanded .expand-btn svg {
+            transform: rotate(180deg);
+        }
+
+        .details-header {
+            cursor: pointer;
+        }
+
+        /* Remove any height/overflow restrictions */
+        .details-group,
+        .details-item,
+        .form-row,
+        .form-group {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
     </style>
 
 </head>
@@ -1571,125 +1605,26 @@ if (isset($_GET['edit'])) {
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const uploadZone = document.getElementById('uploadZone');
-            const uploadButton = document.getElementById('uploadButton');
-            const photoInput = document.getElementById('photoInput');
-            const previewContainer = document.getElementById('previewContainer');
-            const photoCounter = document.querySelector('.upload-info strong');
-            let uploadedFiles = [];
-
-            // Функція оновлення лічильника фотографій
-            function updatePhotoCounter() {
-                const count = document.querySelectorAll('.preview-item').length;
-                photoCounter.textContent = `Masz ${count} z 40 możliwych zdjęć`;
-                if (count < 15) {
-                    photoCounter.style.color = '#ff4444';
-                } else {
-                    photoCounter.style.color = '#44aa44';
-                }
-            }
-
-            // Функція для перевірки файлу
-            function validateFile(file) {
-                const validTypes = ['image/jpeg', 'image/png'];
-                const maxSize = 5 * 1024 * 1024; // 5MB
-
-                if (!validTypes.includes(file.type)) {
-                    alert('Dozwolone są tylko pliki JPG i PNG.');
-                    return false;
-                }
-
-                if (file.size > maxSize) {
-                    alert('Maksymalny rozmiar pliku to 5MB.');
-                    return false;
-                }
-
-                return true;
-            }
-
-            // Функція для створення попереднього перегляду
-            function createPreview(file) {
-                const preview = document.createElement('div');
-                preview.className = 'preview-item';
+            // Get all details sections
+            const detailsSections = document.querySelectorAll('.details-section');
+            
+            // Add click event listener to each section
+            detailsSections.forEach(section => {
+                const header = section.querySelector('.details-header');
+                const button = section.querySelector('.expand-btn');
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button type="button" class="remove-photo">×</button>
-                    `;
-                    // Додаємо в кінець
-                    previewContainer.appendChild(preview);
-                    updatePhotoCounter();
-                };
-                reader.readAsDataURL(file);
-
-                // Додаємо обробник для кнопки видалення
-                preview.querySelector('.remove-photo').addEventListener('click', function() {
-                    preview.remove();
-                    const index = uploadedFiles.indexOf(file);
-                    if (index > -1) {
-                        uploadedFiles.splice(index, 1);
-                    }
-                    updatePhotoCounter();
-                });
-            }
-
-            // Обробка вибору файлів
-            photoInput.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                const currentCount = document.querySelectorAll('.preview-item').length;
-                
-                files.forEach(file => {
-                    if (currentCount + uploadedFiles.length >= 40) {
-                        alert('Możesz dodać maksymalnie 40 zdjęć.');
-                        return;
-                    }
-
-                    if (validateFile(file)) {
-                        uploadedFiles.push(file);
-                        createPreview(file);
-                    }
-                });
-
-                // Очищаємо input для можливості повторного вибору тих самих файлів
-                this.value = '';
-            });
-
-            // Обробка drag & drop
-            uploadZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadZone.classList.remove('dragover');
-                
-                const files = Array.from(e.dataTransfer.files);
-                const currentCount = document.querySelectorAll('.preview-item').length;
-
-                files.forEach(file => {
-                    if (currentCount + uploadedFiles.length >= 40) {
-                        alert('Możesz dodać maksymalnie 40 zdjęć.');
-                        return;
-                    }
-
-                    if (validateFile(file)) {
-                        uploadedFiles.push(file);
-                        createPreview(file);
-                    }
-                });
-            });
-
-            // Обробник кліку на кнопку додавання зображень
-            uploadButton.addEventListener('click', () => {
-                photoInput.click();
-            });
-
-            // Обробники для drag & drop
-            uploadZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadZone.classList.add('dragover');
-            });
-
-            uploadZone.addEventListener('dragleave', () => {
-                uploadZone.classList.remove('dragover');
+                if (header && button) {
+                    // Function to toggle section
+                    const toggleSection = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        section.classList.toggle('expanded');
+                    };
+                    
+                    // Add click listeners
+                    header.addEventListener('click', toggleSection);
+                    button.addEventListener('click', toggleSection);
+                }
             });
         });
 
@@ -1748,42 +1683,175 @@ if (isset($_GET['edit'])) {
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    // Отримуємо всі кнопки для розгортання
-    const expandButtons = document.querySelectorAll('.expand-btn');
-
-    // Додаємо обробник подій для кожної кнопки
-    expandButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Знаходимо найближчий контейнер з класом details-section
-            const detailsSection = button.closest('.details-section');
+            // Get all details sections
+            const detailsSections = document.querySelectorAll('.details-section');
             
-            if (detailsSection) {
-                // Знаходимо елемент з класом details-content всередині секції
-                const detailsContent = detailsSection.querySelector('.details-content');
-
-                if (detailsContent) {
-                    detailsContent.classList.toggle('expanded');
-                    const isExpanded = detailsContent.classList.contains('expanded');
-                    detailsContent.style.maxHeight = isExpanded ? detailsContent.scrollHeight + 'px' : null;
+            detailsSections.forEach(section => {
+                const header = section.querySelector('.details-header');
+                const content = section.querySelector('.details-content');
+                
+                if (header && content) {
+                    header.addEventListener('click', (e) => {
+                        // Prevent click if clicking on other interactive elements
+                        if (e.target.closest('.expand-btn')) {
+                            return;
+                        }
+                        section.classList.toggle('expanded');
+                    });
+                    
+                    const expandBtn = header.querySelector('.expand-btn');
+                    if (expandBtn) {
+                        expandBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            section.classList.toggle('expanded');
+                        });
+                    }
                 }
-            }
-
-            // Для equipment-section
-            const equipmentSection = button.closest('.equipment-section');
-            
-            if (equipmentSection) {
-                const equipmentContent = equipmentSection.querySelector('.equipment-content');
-
-                if (equipmentContent) {
-                    equipmentContent.classList.toggle('expanded');
-                    const isExpanded = equipmentContent.classList.contains('expanded');
-                    equipmentContent.style.maxHeight = isExpanded ? equipmentContent.scrollHeight + 'px' : null;
-                }
-            }
+            });
         });
-    });
-});
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadZone = document.getElementById('uploadZone');
+            const uploadButton = document.getElementById('uploadButton');
+            const photoInput = document.getElementById('photoInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const photoCounter = document.querySelector('.upload-info strong');
+            let uploadedFiles = [];
 
+            // Функція оновлення лічильника фотографій
+            function updatePhotoCounter() {
+                const count = document.querySelectorAll('.preview-item').length;
+                photoCounter.textContent = `Masz ${count} z 40 możliwych zdjęć`;
+                if (count < 15) {
+                    photoCounter.style.color = '#ff4444';
+                } else {
+                    photoCounter.style.color = '#44aa44';
+                }
+            }
+
+            // Функція для перевірки файлу
+            function validateFile(file) {
+                const validTypes = ['image/jpeg', 'image/png'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!validTypes.includes(file.type)) {
+                    alert('Dozwolone są tylko pliki JPG i PNG.');
+                    return false;
+                }
+
+                if (file.size > maxSize) {
+                    alert('Maksymalny rozmiar pliku to 5MB.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Функція для створення попереднього перегляду
+            function createPreview(file) {
+                const preview = document.createElement('div');
+                preview.className = 'preview-item';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-photo">×</button>
+                    `;
+                    previewContainer.appendChild(preview);
+                    updatePhotoCounter();
+                };
+                reader.readAsDataURL(file);
+
+                preview.querySelector('.remove-photo').addEventListener('click', function() {
+                    preview.remove();
+                    const index = uploadedFiles.indexOf(file);
+                    if (index > -1) {
+                        uploadedFiles.splice(index, 1);
+                    }
+                    updatePhotoCounter();
+                });
+            }
+
+            // Обробка вибору файлів
+            photoInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                const currentCount = document.querySelectorAll('.preview-item').length;
+                
+                files.forEach(file => {
+                    if (currentCount + uploadedFiles.length >= 40) {
+                        alert('Możesz dodać maksymalnie 40 zdjęć.');
+                        return;
+                    }
+
+                    if (validateFile(file)) {
+                        uploadedFiles.push(file);
+                        createPreview(file);
+                    }
+                });
+
+                this.value = '';
+            });
+
+            // Обробка drag & drop
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                
+                const files = Array.from(e.dataTransfer.files);
+                const currentCount = document.querySelectorAll('.preview-item').length;
+
+                files.forEach(file => {
+                    if (currentCount + uploadedFiles.length >= 40) {
+                        alert('Możesz dodać maksymalnie 40 zdjęć.');
+                        return;
+                    }
+
+                    if (validateFile(file)) {
+                        uploadedFiles.push(file);
+                        createPreview(file);
+                    }
+                });
+            });
+
+            uploadButton.addEventListener('click', () => {
+                photoInput.click();
+            });
+
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+
+            // Expandable sections functionality
+            const detailsSections = document.querySelectorAll('.details-section');
+            
+            detailsSections.forEach(section => {
+                const header = section.querySelector('.details-header');
+                const button = header.querySelector('.expand-btn');
+                
+                const toggleSection = (e) => {
+                    e.preventDefault();
+                    section.classList.toggle('expanded');
+                };
+                
+                header.addEventListener('click', (e) => {
+                    if (!e.target.closest('.expand-btn')) {
+                        toggleSection(e);
+                    }
+                });
+                
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleSection(e);
+                });
+            });
+        });
     </script>
 </body>
 </html>
